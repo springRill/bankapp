@@ -1,6 +1,6 @@
 package com.front.controller;
 
-import com.front.dto.AccountDto;
+import com.front.dto.UserDto;
 import com.front.service.AccountsApiService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -64,7 +64,7 @@ public class SignUpController {
         }
         if(errors.isEmpty()) {
             try {
-                accountsApiService.createAccount(new AccountDto(null, login, passwordEncoder.encode(password), name, birthdate));
+                accountsApiService.saveUser(new UserDto(null, login, passwordEncoder.encode(password), name, birthdate));
             } catch (HttpClientErrorException httpClientErrorException) {
                 if (httpClientErrorException.getStatusCode().equals(HttpStatus.CONFLICT)) {
                     errors.add("Пользователь с таким именем уже существует");

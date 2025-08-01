@@ -1,6 +1,8 @@
 package com.account.controller;
 
 import com.account.dto.AccountDto;
+import com.account.dto.CurrencyEnum;
+import com.account.dto.UserDto;
 import com.account.service.AccountService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,15 +21,33 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("")
-    public AccountDto getAccountByName(@RequestParam String username) throws AccountNotFoundException {
-        return accountService.getAccountByUsername(username);
+    @GetMapping("/user")
+    public UserDto getUserByName(@RequestParam String username) throws AccountNotFoundException {
+        return accountService.getUserByUsername(username);
+    }
+
+    @PostMapping("/user")
+    public UserDto saveUser(@RequestBody UserDto userDto) {
+        return accountService.saveUser(userDto);
+    }
+
+    @GetMapping("/value/{userId}/{currency}")
+    public AccountDto getAccountByUserIdAndCurrency(@PathVariable Long userId,
+                                                    @PathVariable CurrencyEnum currency) {
+        return accountService.getAccountsByUserIdAndCurrency(userId, currency);
     }
 
     @PostMapping("")
-    public AccountDto createAccount(@RequestBody AccountDto accountDto) {
-        return accountService.createAccount(accountDto);
+    public AccountDto saveAccount(@RequestBody AccountDto accountDto) {
+        return accountService.saveAccount(accountDto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccountById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<String> handleAccountNotFound(AccountNotFoundException ex) {

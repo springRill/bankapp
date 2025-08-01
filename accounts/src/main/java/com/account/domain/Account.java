@@ -1,13 +1,14 @@
 package com.account.domain;
 
+import com.account.dto.CurrencyEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "account", schema = "accounts")
 public class Account {
@@ -16,13 +17,13 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    private String password;
+    @Enumerated(EnumType.STRING)
+    private CurrencyEnum currency;
 
-    private String personName;
-
-    private LocalDate dateOfBirth;
+    private Double value;
 
 }

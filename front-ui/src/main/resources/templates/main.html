@@ -91,21 +91,21 @@
                         <td style="font-weight:bold;">Фамилия Имя</td>
                         <td th:text="${name}"/>
                         <td>
-                            <input name="name" type="text" style="width:100%"/>
+                            <input name="name" type="text" th:value="${name}" style="width:100%"/>
                         </td>
                     </tr>
                     <tr>
                         <td style="font-weight:bold;">Дата рождения</td>
-                        <td th:text="${birthdate}"/>
+                        <td th:text="${#temporals.format(birthdate, 'dd.MM.yyyy')}"/>
                         <td>
-                            <input name="birthdate" type="date" style="width:100%"/>
+                            <input name="birthdate" type="date" th:value="${birthdate}" style="width:100%"/>
                         </td>
                     </tr>
                     <tr th:each="account : ${accounts}">
                         <td style="font-weight:bold;" th:text="${account.getCurrency().getTitle()}"/>
-                        <td th:text="${account.isExists() ? (account.getValue()+' '+account.getCurrency().name()) : ''}"/>
+                        <td th:text="${account.getExists() ? (account.getValue()+' '+account.getCurrency().name()) : ''}"/>
                         <td style="text-align:right">
-                            <input name="account" type="checkbox" th:checked="${account.isExists()}"
+                            <input name="account" type="checkbox" th:checked="${account.getExists()}"
                                    th:value="${account.getCurrency().name()}"/>
                         </td>
                     </tr>

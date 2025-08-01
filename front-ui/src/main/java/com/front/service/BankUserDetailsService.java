@@ -1,6 +1,6 @@
 package com.front.service;
 
-import com.front.dto.AccountDto;
+import com.front.dto.UserDto;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,8 +21,8 @@ public class BankUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AccountDto accountDto = accountsApiService.getAccountByName(username);
-        return new User(accountDto.getUsername(), accountDto.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        UserDto userDto = accountsApiService.getUserByName(username);
+        return new User(userDto.getUsername(), userDto.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
 }

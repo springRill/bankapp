@@ -1,17 +1,17 @@
 package com.account.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
+@AllArgsConstructor
 public class AccountDto {
 
     private Long id;
 
-    private String username;
-    private String password;
+    private Long userId;
+    private CurrencyEnum Currency;
+    private Boolean exists;
+    private Double value;
 
-    private String personName;
-    private LocalDate dateOfBirth;
 }
