@@ -1,9 +1,8 @@
 package com.front.controller;
 
-import com.front.dto.AccountDto;
-import com.front.dto.CurrencyEnum;
-import com.front.dto.UserDto;
+import com.front.dto.*;
 import com.front.service.AccountsApiService;
+import com.front.service.CashApiService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -33,10 +30,13 @@ public class UserController {
 
     private final AccountsApiService accountsApiService;
 
-    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService) {
+    private final CashApiService cashApiService;
+
+    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService, CashApiService cashApiService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.accountsApiService = accountsApiService;
+        this.cashApiService = cashApiService;
     }
 
     @PostMapping("/{login}/editPassword")
@@ -103,8 +103,21 @@ public class UserController {
     }
 
     @PostMapping("/{login}/сash")
-    public String сash() {
-        return "main";
+    public String сash(@PathVariable(name = "login") String login,
+                       @RequestParam(name = "currency") CurrencyEnum currency,
+                       @RequestParam(name = "value") Double value,
+                       @RequestParam(name = "action") CashActionEnum action,
+                       RedirectAttributes redirectAttributes) {
+
+        UserDto userDto = accountsApiService.getUserByName(login);
+        CashDto cashDto = new CashDto(userDto.getId(), currency, value, action);
+
+        try {
+            cashApiService.cash(cashDto);
+        } catch (RestClientResponseException restClientResponseException) {
+            redirectAttributes.addFlashAttribute("cashErrors", List.of(restClientResponseException.getResponseBodyAsString()));
+        }
+        return "redirect:/main";
     }
 
     @PostMapping("/user/{login}/transfer")

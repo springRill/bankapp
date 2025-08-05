@@ -1,14 +1,13 @@
 package com.account.controller;
 
-import com.account.dto.AccountDto;
-import com.account.dto.CurrencyEnum;
-import com.account.dto.UserDto;
+import com.account.dto.*;
 import com.account.service.AccountService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.OperationsException;
 import javax.security.auth.login.AccountNotFoundException;
 
 @RestController
@@ -48,6 +47,27 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/cash")
+    public ResponseEntity<Void> cash(@RequestBody CashDto cashDto) throws OperationsException {
+        AccountDto accountDto = accountService.getAccountsByUserIdAndCurrency(cashDto.getUserId(), cashDto.getCurrency());
+        if (cashDto.getCashAction().equals(CashActionEnum.GET)) {
+            if(accountDto.getValue() < cashDto.getValue()) {
+                throw new OperationsException("На счёте не достаточно средств");
+            }
+            accountDto.setValue(accountDto.getValue() - cashDto.getValue());
+        }
+        if (cashDto.getCashAction().equals(CashActionEnum.PUT)) {
+            accountDto.setExists(true);
+            accountDto.setValue(accountDto.getValue() + cashDto.getValue());
+        }
+        accountService.saveAccount(accountDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(OperationsException.class)
+    public ResponseEntity<String> handleOperationsException(OperationsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<String> handleAccountNotFound(AccountNotFoundException ex) {

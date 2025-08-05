@@ -43,7 +43,7 @@ public class MainController {
                 }).collect(Collectors.toList());
 
         model.addAttribute("accounts", accountDtoList);
-//        model.addAttribute("", accountDto);
+        model.addAttribute("currency", CurrencyEnum.values());
 //        model.addAttribute("", accountDto);
 //        model.addAttribute("", accountDto);
         return "main";
