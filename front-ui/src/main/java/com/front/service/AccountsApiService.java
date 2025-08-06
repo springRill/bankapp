@@ -3,8 +3,11 @@ package com.front.service;
 import com.front.dto.AccountDto;
 import com.front.dto.CurrencyEnum;
 import com.front.dto.UserDto;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 @Service
 public class AccountsApiService {
@@ -13,6 +16,15 @@ public class AccountsApiService {
 
     public AccountsApiService() {
         accountsServiceClient = RestClient.create("http://localhost:8081");
+    }
+
+    public List<UserDto> getUsers() {
+        return accountsServiceClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account/users")
+                        .build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<UserDto>>() {});
     }
 
     public UserDto getUserByName(String username) {

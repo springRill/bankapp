@@ -39,19 +39,6 @@
 <a sec:authorize="isAuthenticated()" href="/logout" style="float:right;">
     <b>ВЫЙТИ &cudarrr;</b>
 </a>
-<!--
-
-<div sec:authorize="isAuthenticated()">
-    Добро пожаловать, <span th:text="${#authentication.name}">Пользователь</span>!
-    <a th:href="@{/logout}">Выйти</a>
-</div>
-
-&lt;!&ndash; Только для неаутентифицированных &ndash;&gt;
-<div sec:authorize="isAnonymous()">
-    <a th:href="@{/login}">Войти</a> или <a th:href="@{/register}">Зарегистрироваться</a>
-</div>
-
--->
 <table sec:authorize="isAuthenticated()" style="width:70%;margin-left:auto;margin-right:auto;">
     <tr>
         <td style="padding:2px;">
@@ -135,7 +122,7 @@
                             </select>
                         </td>
                         <td>
-                            <input name="value" type="number" style="width:100%" required/>
+                            <input name="value" type="number" step="0.01" min="0" style="width:100%" required/>
                         </td>
                         <td>
                         <td style="text-align:right">
@@ -171,7 +158,7 @@
                             </select>
                         </td>
                         <td>
-                            <input name="value" type="number" style="width:100%" required/>
+                            <input name="value" type="number" step="0.001" min="0" style="width:100%" required/>
                         </td>
                         <td style="text-align:right">
                             <input hidden name="to_login" th:value="${login}"/>
@@ -206,13 +193,13 @@
                             </select>
                         </td>
                         <td>
-                            <input name="value" type="number" required/>
+                            <input name="value" type="number" step="0.01" min="0" required/>
                         </td>
                         <td>
                             Кому
                             <select name="to_login">
-                                <option th:each="user : ${users}" th:value="${user.getLogin()}"
-                                        th:text="${user.getName()}"/>
+                                <option th:each="user : ${users}" th:value="${user.getUsername()}"
+                                        th:text="${user.getPersonName()}"/>
                             </select>
                         </td>
                         <td style="text-align:right">

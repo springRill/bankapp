@@ -4,14 +4,22 @@ import com.account.domain.Account;
 import com.account.domain.User;
 import com.account.dto.AccountDto;
 import com.account.dto.CurrencyEnum;
+import com.account.dto.TransferDto;
 import com.account.dto.UserDto;
 import com.account.mapper.AccountMapper;
 import com.account.mapper.UserMapper;
 import com.account.repository.AccountRepository;
 import com.account.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import javax.management.OperationsException;
 import javax.security.auth.login.AccountNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -20,9 +28,23 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public AccountService(UserRepository userRepository, AccountRepository accountRepository) {
+    private final ExchangeApiService exchangeApiService;
+
+    public AccountService(UserRepository userRepository, AccountRepository accountRepository, ExchangeApiService exchangeApiService) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
+        this.exchangeApiService = exchangeApiService;
+    }
+
+    public List<UserDto> getUsers() {
+        List<User> userList = userRepository.findAll();
+        List<UserDto> userDtoList = userList.stream().map(user -> {
+            UserDto userDto = new UserDto();
+            userDto.setUsername(user.getUsername());
+            userDto.setPersonName(user.getPersonName());
+            return userDto;
+        }).collect(Collectors.toList());
+        return userDtoList;
     }
 
     public UserDto getUserByUsername(String username) throws AccountNotFoundException {
@@ -48,6 +70,29 @@ public class AccountService {
 
     public void deleteAccountById(Long accountId) {
         accountRepository.deleteById(accountId);
+    }
+
+    @Transactional
+    public void transfer(TransferDto transferDto) throws OperationsException {
+        AccountDto fromAccountDto = getAccountsByUserIdAndCurrency(transferDto.getUserId(), transferDto.getFromCurrency());
+        if(BigDecimal.valueOf(fromAccountDto.getValue()).setScale(2, RoundingMode.HALF_EVEN).doubleValue() < BigDecimal.valueOf(transferDto.getValue()).setScale(2, RoundingMode.HALF_EVEN).doubleValue()) {
+            throw new OperationsException("На счёте не достаточно средств");
+        }
+        Double fromValue = fromAccountDto.getValue() - transferDto.getValue();
+        fromAccountDto.setValue(BigDecimal.valueOf(fromValue).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
+        accountRepository.save(AccountMapper.toAccount(fromAccountDto));
+
+        AccountDto toAccountDto = getAccountsByUserIdAndCurrency(transferDto.getToUserId(), transferDto.getToCurrency());
+        if(Objects.isNull(toAccountDto.getId())){
+            throw new OperationsException("У пользователя %s нет счёта в нужной валюте");
+        }
+
+        Double rubValue = transferDto.getValue() * exchangeApiService.getRate(transferDto.getFromCurrency());
+        Double currencyValue = rubValue / exchangeApiService.getRate(transferDto.getToCurrency());
+
+        Double toValue = toAccountDto.getValue() + currencyValue;
+        toAccountDto.setValue(BigDecimal.valueOf(toValue).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
+        accountRepository.save(AccountMapper.toAccount(toAccountDto));
     }
 
 }

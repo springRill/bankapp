@@ -44,8 +44,8 @@ public class MainController {
 
         model.addAttribute("accounts", accountDtoList);
         model.addAttribute("currency", CurrencyEnum.values());
-//        model.addAttribute("", accountDto);
-//        model.addAttribute("", accountDto);
+        model.addAttribute("users", accountsApiService.getUsers());
+
         return "main";
     }
 }

@@ -3,6 +3,7 @@ package com.front.controller;
 import com.front.dto.*;
 import com.front.service.AccountsApiService;
 import com.front.service.CashApiService;
+import com.front.service.TransferApiService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,11 +33,14 @@ public class UserController {
 
     private final CashApiService cashApiService;
 
-    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService, CashApiService cashApiService) {
+    private final TransferApiService transferApiService;
+
+    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService, CashApiService cashApiService, TransferApiService transferApiService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.accountsApiService = accountsApiService;
         this.cashApiService = cashApiService;
+        this.transferApiService = transferApiService;
     }
 
     @PostMapping("/{login}/editPassword")
@@ -120,9 +124,38 @@ public class UserController {
         return "redirect:/main";
     }
 
-    @PostMapping("/user/{login}/transfer")
-    public String transfer() {
-        return "main";
+    @PostMapping("/{login}/transfer")
+    public String transfer(@PathVariable(name = "login") String login,
+                           @RequestParam(name = "from_currency") CurrencyEnum fromCurrency,
+                           @RequestParam(name = "to_currency") CurrencyEnum toCurrency,
+                           @RequestParam(name = "value") Double value,
+                           @RequestParam(name = "to_login") String toLogin,
+                           RedirectAttributes redirectAttributes) {
+
+        List<String> transferErrors = new ArrayList<>();
+        List<String> transferOtherErrors = new ArrayList<>();
+
+        UserDto fromUserDto = accountsApiService.getUserByName(login);
+        UserDto toUserDto = accountsApiService.getUserByName(toLogin);
+        TransferDto transferDto = new TransferDto(fromUserDto.getId(), fromCurrency, toCurrency, value, toUserDto.getId());
+
+        if(login.equals(toLogin) && fromCurrency.equals(toCurrency)){
+            redirectAttributes.addFlashAttribute("transferErrors", List.of("Перевести можно только между разными счетами"));
+            return "redirect:/main";
+        }
+
+        try {
+            transferApiService.transfer(transferDto);
+        } catch (RestClientResponseException restClientResponseException) {
+            if(login.equals(toLogin)) {
+                transferErrors.add(restClientResponseException.getResponseBodyAsString().formatted(toLogin));
+            }else{
+                transferOtherErrors.add(restClientResponseException.getResponseBodyAsString().formatted(toLogin));
+            }
+        }
+        redirectAttributes.addFlashAttribute("transferErrors", transferErrors);
+        redirectAttributes.addFlashAttribute("transferOtherErrors", transferOtherErrors);
+        return "redirect:/main";
     }
 
     private void authenticateUser(String username, HttpServletRequest request) {

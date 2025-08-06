@@ -18,6 +18,8 @@
         <module>front-ui</module>
         <module>accounts</module>
         <module>cash</module>
+        <module>transfer</module>
+        <module>exchange</module>
     </modules>
 
     <dependencies>
