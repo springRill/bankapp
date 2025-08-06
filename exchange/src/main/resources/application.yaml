@@ -1,0 +1,24 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: exchange-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bank
+    username: postgres
+    password: admin
+  #    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jpa:
+    hibernate:
+      #      ddl-auto: none          #Ничего не делает
+      #      ddl-auto: create        #Создаёт таблицы каждый раз с нуля (удаляет старые данные!)
+      #      ddl-auto: create-drop   #Создаёт при старте, удаляет при завершении
+      #      ddl-auto: update        #Создаёт недостающие таблицы и колонки, не удаляя данные
+      #      ddl-auto: validate      #Проверяет соответствие между сущностями и таблицами, но не изменяет БД
+      ddl-auto: update
+    show-sql: true

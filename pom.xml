@@ -20,6 +20,7 @@
         <module>cash</module>
         <module>transfer</module>
         <module>exchange</module>
+        <module>exchange-generator</module>
     </modules>
 
     <dependencies>

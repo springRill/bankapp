@@ -28,12 +28,9 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    private final ExchangeApiService exchangeApiService;
-
-    public AccountService(UserRepository userRepository, AccountRepository accountRepository, ExchangeApiService exchangeApiService) {
+    public AccountService(UserRepository userRepository, AccountRepository accountRepository) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
-        this.exchangeApiService = exchangeApiService;
     }
 
     public List<UserDto> getUsers() {
@@ -74,7 +71,7 @@ public class AccountService {
 
     @Transactional
     public void transfer(TransferDto transferDto) throws OperationsException {
-        AccountDto fromAccountDto = getAccountsByUserIdAndCurrency(transferDto.getUserId(), transferDto.getFromCurrency());
+        AccountDto fromAccountDto = getAccountsByUserIdAndCurrency(transferDto.getUserId(), transferDto.getFromExchange().getCurrency());
         if(BigDecimal.valueOf(fromAccountDto.getValue()).setScale(2, RoundingMode.HALF_EVEN).doubleValue() < BigDecimal.valueOf(transferDto.getValue()).setScale(2, RoundingMode.HALF_EVEN).doubleValue()) {
             throw new OperationsException("На счёте не достаточно средств");
         }
@@ -82,13 +79,13 @@ public class AccountService {
         fromAccountDto.setValue(BigDecimal.valueOf(fromValue).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
         accountRepository.save(AccountMapper.toAccount(fromAccountDto));
 
-        AccountDto toAccountDto = getAccountsByUserIdAndCurrency(transferDto.getToUserId(), transferDto.getToCurrency());
+        AccountDto toAccountDto = getAccountsByUserIdAndCurrency(transferDto.getToUserId(), transferDto.getToExchange().getCurrency());
         if(Objects.isNull(toAccountDto.getId())){
             throw new OperationsException("У пользователя %s нет счёта в нужной валюте");
         }
 
-        Double rubValue = transferDto.getValue() * exchangeApiService.getRate(transferDto.getFromCurrency());
-        Double currencyValue = rubValue / exchangeApiService.getRate(transferDto.getToCurrency());
+        Double rubValue = transferDto.getValue() * transferDto.getFromExchange().getValue();
+        Double currencyValue = rubValue / transferDto.getToExchange().getValue();
 
         Double toValue = toAccountDto.getValue() + currencyValue;
         toAccountDto.setValue(BigDecimal.valueOf(toValue).setScale(2, RoundingMode.HALF_EVEN).doubleValue());

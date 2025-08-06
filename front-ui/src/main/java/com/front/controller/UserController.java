@@ -137,7 +137,9 @@ public class UserController {
 
         UserDto fromUserDto = accountsApiService.getUserByName(login);
         UserDto toUserDto = accountsApiService.getUserByName(toLogin);
-        TransferDto transferDto = new TransferDto(fromUserDto.getId(), fromCurrency, toCurrency, value, toUserDto.getId());
+        ExchangeDto fromExchangeDto = new ExchangeDto(fromCurrency, null);
+        ExchangeDto toExchangeDto = new ExchangeDto(toCurrency, null);
+        TransferDto transferDto = new TransferDto(fromUserDto.getId(), fromExchangeDto, toExchangeDto, value, toUserDto.getId());
 
         if(login.equals(toLogin) && fromCurrency.equals(toCurrency)){
             redirectAttributes.addFlashAttribute("transferErrors", List.of("Перевести можно только между разными счетами"));

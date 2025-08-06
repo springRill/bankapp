@@ -1,0 +1,22 @@
+package com.exchange.domain;
+
+import com.exchange.dto.CurrencyEnum;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "exchange", schema = "exchange")
+public class Exchange {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private CurrencyEnum currency;
+
+    private Double value;
+}
