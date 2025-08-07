@@ -4,3 +4,9 @@ server:
 spring:
   application:
     name: blocker-api
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        register-health-check: false
