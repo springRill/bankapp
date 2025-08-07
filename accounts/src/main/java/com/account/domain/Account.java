@@ -24,6 +24,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private CurrencyEnum currency;
 
+    @Column(name = "amount")
     private Double value;
 
 }

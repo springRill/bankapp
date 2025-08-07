@@ -2,7 +2,7 @@ package com.account.controller;
 
 import com.account.dto.*;
 import com.account.service.AccountService;
-import com.account.service.ExchangeApiService;
+import com.account.service.NotificationsApiService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,11 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    private final ExchangeApiService exchangeApiService;
+    private final NotificationsApiService notificationsApiService;
 
-    public AccountController(AccountService accountService, ExchangeApiService exchangeApiService) {
+    public AccountController(AccountService accountService, NotificationsApiService notificationsApiService) {
         this.accountService = accountService;
-        this.exchangeApiService = exchangeApiService;
+        this.notificationsApiService = notificationsApiService;
     }
 
     @GetMapping("/users")
@@ -37,8 +37,15 @@ public class AccountController {
         return accountService.getUserByUsername(username);
     }
 
+    @GetMapping("/user/{userId}")
+    public UserDto getUserById(@PathVariable Long userId) {
+        return accountService.getUserById(userId);
+    }
+
     @PostMapping("/user")
     public UserDto saveUser(@RequestBody UserDto userDto) {
+        notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), userDto.toString()));
+
         return accountService.saveUser(userDto);
     }
 
@@ -50,6 +57,9 @@ public class AccountController {
 
     @PostMapping("")
     public AccountDto saveAccount(@RequestBody AccountDto accountDto) {
+        NotificationDto notificationDto = new NotificationDto(accountService.getUserById(accountDto.getUserId()).getUsername(), accountDto.toString());
+        notificationsApiService.notificate(notificationDto);
+
         return accountService.saveAccount(accountDto);
     }
 

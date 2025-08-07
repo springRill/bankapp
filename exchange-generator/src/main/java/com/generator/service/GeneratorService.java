@@ -31,7 +31,9 @@ public class GeneratorService {
         exchangeDtoList.forEach(exchangeDto -> {
             if(!exchangeDto.getCurrency().equals(CurrencyEnum.RUB)) {
                 int change = (int) (Math.random() * 3) - 1;
-                exchangeDto.setValue(exchangeDto.getValue() + change);
+                if(exchangeDto.getValue()+ change > 1) {
+                    exchangeDto.setValue(exchangeDto.getValue() + change);
+                }
             }
             exchangeApiService.setExchange(exchangeDto);
             System.out.println(exchangeDto);

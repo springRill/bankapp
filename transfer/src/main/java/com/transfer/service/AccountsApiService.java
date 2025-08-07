@@ -1,6 +1,7 @@
 package com.transfer.service;
 
 import com.transfer.dto.TransferDto;
+import com.transfer.dto.UserDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -26,6 +27,15 @@ public class AccountsApiService {
         }catch (RestClientResponseException restClientResponseException){
             throw new OperationsException(restClientResponseException.getResponseBodyAsString());
         }
+    }
+
+    public UserDto getUserById(Long userId) {
+        return accountsServiceClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/account/user/{userId}")
+                        .build(userId))
+                .retrieve()
+                .body(UserDto.class);
     }
 
 }

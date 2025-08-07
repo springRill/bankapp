@@ -21,6 +21,7 @@
         <module>transfer</module>
         <module>exchange</module>
         <module>exchange-generator</module>
+        <module>notifications</module>
     </modules>
 
     <dependencies>

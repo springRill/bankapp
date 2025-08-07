@@ -49,6 +49,12 @@ public class AccountService {
         return UserMapper.toUserDto(user);
     }
 
+    public UserDto getUserById(Long userId) {
+        User user = userRepository.findById(userId).orElse(new User());
+        return UserMapper.toUserDto(user);
+    }
+
+
     public UserDto saveUser(UserDto userDto) {
         User user = userRepository.save(UserMapper.toUser(userDto));
         return UserMapper.toUserDto(user);

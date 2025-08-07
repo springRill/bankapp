@@ -18,5 +18,6 @@ public class Exchange {
     @Enumerated(EnumType.STRING)
     private CurrencyEnum currency;
 
+    @Column(name = "amount")
     private Double value;
 }
