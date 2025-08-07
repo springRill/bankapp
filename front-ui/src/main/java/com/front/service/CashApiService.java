@@ -7,7 +7,7 @@ import org.springframework.web.client.RestClient;
 @Service
 public class CashApiService {
 
-    RestClient cashServiceClient;
+    private final RestClient cashServiceClient;
 
     public CashApiService() {
         cashServiceClient = RestClient.create("http://localhost:8082");

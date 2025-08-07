@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class AccountsApiService {
 
-    RestClient accountsServiceClient;
+    private final RestClient accountsServiceClient;
 
     public AccountsApiService() {
         accountsServiceClient = RestClient.create("http://localhost:8081");

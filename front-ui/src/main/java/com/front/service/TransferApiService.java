@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class TransferApiService {
 
-    RestClient transferServiceClient;
+    private final RestClient transferServiceClient;
 
     public TransferApiService() {
         transferServiceClient = RestClient.create("http://localhost:8083");

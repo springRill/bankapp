@@ -9,7 +9,7 @@ import javax.management.OperationsException;
 @Service
 public class NotificationsApiService {
 
-    RestClient notificationsServiceClient;
+    private final RestClient notificationsServiceClient;
 
     public NotificationsApiService() {
         notificationsServiceClient = RestClient.create("http://localhost:8086");

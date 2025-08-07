@@ -7,7 +7,7 @@ import org.springframework.web.client.RestClient;
 @Service
 public class ExchangeApiService {
 
-    RestClient exchangeServiceClient;
+    private final RestClient exchangeServiceClient;
 
     public ExchangeApiService() {
         exchangeServiceClient = RestClient.create("http://localhost:8084");

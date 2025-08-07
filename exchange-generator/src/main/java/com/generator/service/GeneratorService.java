@@ -14,7 +14,7 @@ public class GeneratorService {
 
     private final ExchangeApiService exchangeApiService;
 
-    List<ExchangeDto> exchangeDtoList = new ArrayList<>();
+    private final List<ExchangeDto> exchangeDtoList = new ArrayList<>();
 
     public GeneratorService(ExchangeApiService exchangeApiService) {
         this.exchangeApiService = exchangeApiService;

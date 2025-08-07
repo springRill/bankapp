@@ -4,6 +4,7 @@ import com.cash.dto.CashDto;
 import com.cash.dto.NotificationDto;
 import com.cash.dto.UserDto;
 import com.cash.service.AccountsApiService;
+import com.cash.service.BlockerApiService;
 import com.cash.service.NotificationsApiService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,19 @@ public class CashController {
 
     private final NotificationsApiService notificationsApiService;
 
-    public CashController(AccountsApiService accountsApiService, NotificationsApiService notificationsApiService) {
+    private final BlockerApiService blockerApiService;
+
+    public CashController(AccountsApiService accountsApiService, NotificationsApiService notificationsApiService, BlockerApiService blockerApiService) {
         this.accountsApiService = accountsApiService;
         this.notificationsApiService = notificationsApiService;
+        this.blockerApiService = blockerApiService;
     }
 
     @PostMapping("")
     public void cash(@RequestBody CashDto cashDto) throws OperationsException {
+        if(!blockerApiService.validate()){
+            throw new OperationsException("Операция заблокирована блокировщиком");
+        }
         UserDto userDto = accountsApiService.getUserById(cashDto.getUserId());
         notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), cashDto.toString()));
         accountsApiService.cash(cashDto);

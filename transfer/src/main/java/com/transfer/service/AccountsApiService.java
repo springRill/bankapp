@@ -11,7 +11,7 @@ import javax.management.OperationsException;
 @Service
 public class AccountsApiService {
 
-    RestClient accountsServiceClient;
+    private final RestClient accountsServiceClient;
 
     public AccountsApiService() {
         accountsServiceClient = RestClient.create("http://localhost:8081");

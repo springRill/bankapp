@@ -22,6 +22,7 @@
         <module>exchange</module>
         <module>exchange-generator</module>
         <module>notifications</module>
+        <module>blocker</module>
     </modules>
 
     <dependencies>

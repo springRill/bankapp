@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class BankUserDetailsService implements UserDetailsService {
 
-    AccountsApiService accountsApiService;
+    private final AccountsApiService accountsApiService;
 
     public BankUserDetailsService(AccountsApiService accountsApiService) {
         this.accountsApiService = accountsApiService;
