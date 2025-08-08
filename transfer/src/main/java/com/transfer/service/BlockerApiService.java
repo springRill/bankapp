@@ -1,26 +1,16 @@
 package com.transfer.service;
 
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-
-import java.util.List;
 
 @Service
 public class BlockerApiService {
 
     private final RestClient blockerServiceClient;
 
-    public BlockerApiService(DiscoveryClient discoveryClient) {
-        List<ServiceInstance> instances = discoveryClient.getInstances("blocker-api");
-        if (instances.isEmpty()) {
-            //blockerServiceClient = RestClient.create("http://localhost:8087");
-            throw new IllegalStateException("Service 'blocker-api' not found in DiscoveryClient");
-        } else {
-            ServiceInstance instance = instances.get(0);
-            blockerServiceClient = RestClient.create(instance.getUri().toString());
-        }
+    public BlockerApiService(RestClient.Builder builder) {
+        //blockerServiceClient = RestClient.create("http://localhost:8087/api");
+        this.blockerServiceClient = builder.baseUrl("http://blocker-api/api").build();
     }
 
     public Boolean validate(){

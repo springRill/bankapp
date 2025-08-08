@@ -6,6 +6,7 @@ import com.cash.dto.UserDto;
 import com.cash.service.AccountsApiService;
 import com.cash.service.BlockerApiService;
 import com.cash.service.NotificationsApiService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.management.OperationsException;
 
 @RestController
-@RequestMapping("/cash")
+@RequestMapping("/api/cash")
 public class CashController {
 
     private final AccountsApiService accountsApiService;

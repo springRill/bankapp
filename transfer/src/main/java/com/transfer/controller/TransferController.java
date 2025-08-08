@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/transfer")
+@RequestMapping("/api/transfer")
 public class TransferController {
 
     private final AccountsApiService accountsApiService;

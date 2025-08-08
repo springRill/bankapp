@@ -6,7 +6,7 @@ import com.exchange.service.ExchangeService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/exchange")
+@RequestMapping("/api/exchange")
 public class ExchangeController {
 
     private final ExchangeService exchangeService;

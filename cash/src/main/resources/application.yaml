@@ -4,9 +4,15 @@ server:
 spring:
   application:
     name: cash-api
+  config:
+    import: 'optional:consul:'
   cloud:
     consul:
       host: localhost
       port: 8500
+      config:
+        format: yaml
+        data-key: data
+        enabled: true
       discovery:
         register-health-check: false

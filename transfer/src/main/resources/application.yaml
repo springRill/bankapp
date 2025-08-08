@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: transfer-api
+  config:
+    import: 'optional:consul:'
   cloud:
     consul:
       host: localhost

@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: blocker-api
+  config:
+    import: 'optional:consul:'
   cloud:
     consul:
       host: localhost

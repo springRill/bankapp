@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: front-ui
+  config:
+    import: 'optional:consul:'
   cloud:
     consul:
       host: localhost

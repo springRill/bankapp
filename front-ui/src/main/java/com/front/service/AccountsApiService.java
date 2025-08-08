@@ -3,8 +3,6 @@ package com.front.service;
 import com.front.dto.AccountDto;
 import com.front.dto.CurrencyEnum;
 import com.front.dto.UserDto;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -16,15 +14,9 @@ public class AccountsApiService {
 
     private final RestClient accountsServiceClient;
 
-    public AccountsApiService(DiscoveryClient discoveryClient) {
-        List<ServiceInstance> instances = discoveryClient.getInstances("accounts-api");
-        if (instances.isEmpty()) {
-            //accountsServiceClient = RestClient.create("http://localhost:8081");
-            throw new IllegalStateException("Service 'accounts-api' not found in DiscoveryClient");
-        } else {
-            ServiceInstance instance = instances.get(0);
-            accountsServiceClient = RestClient.create(instance.getUri().toString());
-        }
+    public AccountsApiService(RestClient.Builder builder) {
+        //accountsServiceClient = RestClient.create("http://localhost:8081/api");
+        this.accountsServiceClient = builder.baseUrl("http://accounts-api/api").build();
     }
 
     public List<UserDto> getUsers() {

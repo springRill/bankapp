@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.security.auth.login.AccountNotFoundException;
 
 @RestController
-@RequestMapping("/validate")
+@RequestMapping("/api/validate")
 public class BlockerController {
 
     private final BlockerService blockerService;

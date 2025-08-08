@@ -15,7 +15,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/account")
 public class AccountController {
 
     private final AccountService accountService;
