@@ -10,7 +10,7 @@ public class AccountDto {
     private Long id;
 
     private Long userId;
-    private CurrencyEnum Currency;
+    private CurrencyEnum currency;
     private Boolean exists;
     private Double value;
 
