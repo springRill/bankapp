@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: exchange-generator-api
+    name: exchange-generator
   config:
     import: 'optional:consul:'
   cloud:
@@ -12,3 +12,18 @@ spring:
       port: 8500
       discovery:
         register-health-check: false
+
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8089/realms/bank
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: exchange-generator
+            client-secret: KFkcoWi5ygHvZeudTTt06ShOtZ3BgMj8
+            scope: profile
+            authorizationGrantType: client_credentials
+            clientAuthenticationMethod: client_secret_post

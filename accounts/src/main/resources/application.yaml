@@ -32,6 +32,23 @@ spring:
 #      ddl-auto: create-drop   #Создаёт при старте, удаляет при завершении
 #      ddl-auto: update        #Создаёт недостающие таблицы и колонки, не удаляя данные
 #      ddl-auto: validate      #Проверяет соответствие между сущностями и таблицами, но не изменяет БД
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8089/realms/bank
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8089/realms/bank
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: accounts-api
+            client-secret: UDOxfaGfTeiuEZCrBdhWVBtoR8U5AHQf
+            scope: profile
+            authorizationGrantType: client_credentials
+            clientAuthenticationMethod: client_secret_post

@@ -15,11 +15,11 @@ public class CashApiService {
     }
 
     public void cash(CashDto cashDto) {
-            cashServiceClient.post()
-                    .uri("/cash")
-                    .body(cashDto)
-                    .retrieve()
-                    .toBodilessEntity();
+        cashServiceClient.post()
+                .uri("/cash")
+                .body(cashDto)
+                .retrieve()
+                .toBodilessEntity();
     }
 
 }

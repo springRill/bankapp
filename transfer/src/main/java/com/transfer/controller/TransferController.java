@@ -10,6 +10,7 @@ import com.transfer.service.ExchangeApiService;
 import com.transfer.service.NotificationsApiService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.OperationsException;
@@ -37,6 +38,7 @@ public class TransferController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_TRANSFER')")
     public void transfer(@RequestBody TransferDto transferDto) throws OperationsException {
         if(!blockerApiService.validate()){
             throw new OperationsException("Операция заблокирована блокировщиком");
@@ -53,6 +55,7 @@ public class TransferController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_TRANSFER')")
     public List<ExchangeDto> getExchangeList() throws OperationsException {
         return Arrays.stream(CurrencyEnum.values()).map(currencyEnum -> {
             return new ExchangeDto(currencyEnum, exchangeApiService.getExchangeValue(currencyEnum));

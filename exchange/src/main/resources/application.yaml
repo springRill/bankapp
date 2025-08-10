@@ -36,3 +36,9 @@ spring:
       #ddl-auto: validate      #Проверяет соответствие между сущностями и таблицами, но не изменяет БД
       ddl-auto: update
     #show-sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8089/realms/bank

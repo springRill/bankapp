@@ -12,3 +12,21 @@ spring:
       port: 8500
       discovery:
         register-health-check: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8089/realms/bank
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8089/realms/bank
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: transfer-api
+            client-secret: wUIW8DBh0AiB1XW9hDPQ62lsoJK6hTvT
+            scope: profile
+            authorizationGrantType: client_credentials
+            clientAuthenticationMethod: client_secret_post

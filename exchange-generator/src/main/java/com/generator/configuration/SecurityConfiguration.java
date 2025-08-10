@@ -1,15 +1,10 @@
-package com.front.configuration;
+package com.generator.configuration;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestClient;
 
 @Configuration
@@ -24,8 +19,8 @@ public class SecurityConfiguration {
                 new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientService);
 
         manager.setAuthorizedClientProvider(OAuth2AuthorizedClientProviderBuilder.builder()
-                .clientCredentials() // Включаем получение токена с помощью client_credentials
-                .refreshToken() // Также включаем использование refresh_token
+                .clientCredentials()
+                .refreshToken()
                 .build());
 
         return manager;
@@ -52,20 +47,4 @@ public class SecurityConfiguration {
                 });
     }
 
-
-
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-        return security
-                .authorizeHttpRequests(requests -> requests
-                                .anyRequest().permitAll()
-                )
-                .formLogin(Customizer.withDefaults())
-                .build();
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

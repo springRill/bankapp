@@ -6,9 +6,9 @@ import com.cash.dto.UserDto;
 import com.cash.service.AccountsApiService;
 import com.cash.service.BlockerApiService;
 import com.cash.service.NotificationsApiService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.OperationsException;
@@ -30,6 +30,7 @@ public class CashController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_CASH')")
     public void cash(@RequestBody CashDto cashDto) throws OperationsException {
         if(!blockerApiService.validate()){
             throw new OperationsException("Операция заблокирована блокировщиком");
