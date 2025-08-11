@@ -5,7 +5,6 @@ import com.account.domain.User;
 import com.account.dto.*;
 import com.account.repository.AccountRepository;
 import com.account.repository.UserRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -131,7 +130,6 @@ public class AccountServiceTest {
 
 
     @Test
-    @DisplayName("Should successfully transfer funds with currency conversion")
     void testTransfer_shouldSucceed() throws OperationsException {
         User fromUser = entityManager.persist(new User());
         User toUser = entityManager.persist(new User());

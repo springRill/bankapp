@@ -3,7 +3,6 @@ import com.exchange.domain.Exchange;
 import com.exchange.dto.CurrencyEnum;
 import com.exchange.dto.ExchangeDto;
 import com.exchange.repository.ExchangeRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -45,12 +44,11 @@ public class ExchangeServiceTest {
     }
 
     @Test
-    @DisplayName("Should return the correct exchange rate for a given currency from DB")
-    void testGetExchange_shouldReturnCorrectValue() {
+    void getExchange() {
         Exchange mockExchange = new Exchange();
         mockExchange.setCurrency(CurrencyEnum.USD);
         mockExchange.setValue(1.05);
-        exchangeRepository.save(mockExchange); // Сохраняем тестовые данные в БД
+        exchangeRepository.save(mockExchange);
 
         Double result = exchangeService.getExchange(CurrencyEnum.USD);
         assertNotNull(result);

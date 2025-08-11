@@ -10,12 +10,13 @@ spring:
     consul:
       host: localhost
       port: 8500
-      config:
-        format: yaml
-        data-key: data
-        enabled: true
       discovery:
         register-health-check: false
+      config:
+        enabled: true
+        format: yaml
+        prefix: config
+        defaultContext: application
 
   security:
     oauth2:

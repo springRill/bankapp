@@ -2,6 +2,7 @@ package com.generator.service;
 
 import com.generator.dto.CurrencyEnum;
 import com.generator.dto.ExchangeDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class GeneratorService {
         exchangeDtoList.addAll(Arrays.asList(rub, usd, cny));
     }
 
+    @Value("${message.text:дефолтное сообщение}")
+    private String meassage;
+
     @Scheduled(fixedRate = 5000)
     public void setExchange(){
         exchangeDtoList.forEach(exchangeDto -> {
@@ -38,7 +42,7 @@ public class GeneratorService {
             exchangeApiService.setExchange(exchangeDto);
             System.out.println(exchangeDto);
         });
-        System.out.println("exchange");
+        System.out.println(meassage);
     }
 
 }
