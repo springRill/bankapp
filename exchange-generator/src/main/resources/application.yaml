@@ -23,7 +23,7 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8089/realms/_bank
+            issuer-uri: http://localhost:8089/realms/bank
         registration:
           keycloak:
             provider: keycloak

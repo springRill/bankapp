@@ -18,12 +18,12 @@ spring:
         prefix: config
         defaultContext: application
   datasource:
-    #url: jdbc:h2:mem:usersdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    #username: sa
-    #password:
-    url: jdbc:postgresql://localhost:5432/bank
-    username: postgres
-    password: admin
+    url: jdbc:h2:mem:usersdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    #url: jdbc:postgresql://localhost:5432/bank
+    #username: postgres
+    #password: admin
   sql:
     init:
       mode: always
