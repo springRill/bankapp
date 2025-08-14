@@ -11,6 +11,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@WebMvcTest(controllers = AccountController.class)
+@WebMvcTest(controllers = AccountController.class, excludeAutoConfiguration = OAuth2ClientAutoConfiguration.class)
 public abstract class BaseContractTest {
 
     @Autowired
