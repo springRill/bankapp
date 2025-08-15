@@ -35,3 +35,14 @@ spring:
 
 message:
   text: сообщение из yaml
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      cbservice:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3

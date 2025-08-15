@@ -1,6 +1,7 @@
 package com.account.service;
 
 import com.account.dto.NotificationDto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -10,10 +11,10 @@ public class NotificationsApiService {
     private final RestClient notificationsServiceClient;
 
     public NotificationsApiService(RestClient.Builder builder) {
-        //notificationsServiceClient = RestClient.create("http://localhost:8086/api");
         this.notificationsServiceClient = builder.baseUrl("http://notifications-api/api").build();
     }
 
+    @CircuitBreaker(name = "cbservice")
     public void notificate(NotificationDto notificationDto) {
         notificationsServiceClient.post()
                 .uri("/notifications")

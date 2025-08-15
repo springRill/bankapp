@@ -1,7 +1,7 @@
 services:
   postgresql:
     image: bitnami/postgresql:latest
-    container_name: postgresql
+    container_name: postgresql_one
     ports:
       - "5432:5432"
     environment:
