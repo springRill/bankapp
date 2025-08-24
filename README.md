@@ -3,8 +3,8 @@
 ## приложение состоит из частей:
 
 1. postgresql
-2. keycloak с конфигурацией
-3. consul с конфигурацией
+2. nginx
+3. keycloak с конфигурацией
 4. notifications - сервис уведомлений
 5. blocker - сервис блокировки операций
 6. exchenge-generator - приложение для генерации курсов валют
@@ -14,13 +14,73 @@
 10. accounts - сервис хранения информации о пользователях и счетах
 11. front-ui - веб-приложение с клиентским HTML-интерфейсом
 
-## тестирование и запуск
-для тестирования и запуска слачала делаем install для всего приложения
+## запуск в зонтичным helm чартом
 
-затем запускаем docker-compose.yml в корне придожения
+упаковать все модули мавеном (package)
 
-пользовательский интерфейс будет доступен по адресу http://localhost:8080/
+должен быть установлен docker
 
-keycloak будет доступен по адресу http://localhost:8089/, используется realm "bank"
+### выполнить из корня проекта
 
-consul будет доступен по адресу http://localhost:8500/
+#### запускаем minikube и установливаем окружение
+
+minikube start --driver=docker
+
+minikube docker-env | Invoke-Expression
+
+#### собираем docker контейнеры
+
+docker build -t exchange-api ./exchange
+
+docker build -t exchange-generator ./exchange-generator
+
+docker build -t blocker-api ./blocker
+
+docker build -t notifications-api ./notifications
+
+docker build -t accounts-api ./accounts
+
+docker build -t transfer-api ./transfer
+
+docker build -t cash-api ./cash
+
+docker build -t front-ui ./front-ui
+
+#### обновляем зависимости
+
+helm dependency update ./bank-app
+
+#### разворачиваем приложение в kubernetes
+
+helm install bank-app ./bank-app
+(иногда долго скачиваются образы)
+
+дождаться готовности подов
+(kubectl get pods)
+
+#### запускаем приложение
+
+можно уже пробросить порт от bank-app-front-ui
+
+kubectl port-forward svc/bank-app-front-ui 8080:8080
+
+и запустить приложение в браузере
+http://localhost:8080/
+
+а можно прописать в hosts
+
+127.0.0.1 bankapp
+
+запустить в консоли
+
+minikube tunnel
+
+и запустить приложение в браузере
+
+http://bankapp/
+
+#### останавливаем приложение
+helm uninstall bank-app
+
+
+helm test bank-app ./bank-app

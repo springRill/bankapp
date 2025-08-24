@@ -1,6 +1,5 @@
 package com.front.configuration;
 
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -32,7 +31,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @LoadBalanced
     public RestClient.Builder restClientBuilder(OAuth2AuthorizedClientManager authorizedClientManager) {
 
         return RestClient.builder()
