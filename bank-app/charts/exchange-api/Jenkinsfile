@@ -13,7 +13,7 @@ pipeline {
             steps {
                 dir("${SHARED_REPO}") {
                     echo 'get'
-                    git branch: 'jenkins-test', url: 'https://github.com/springRill/bankapp.git'
+                    git branch: 'helm-and-jenkins', url: 'https://github.com/springRill/bankapp.git'
                 }
             }
         }
