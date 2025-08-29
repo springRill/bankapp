@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SHARED_REPO = '../shared/bankapp' // рабочая папка на jenkins
-        IMAGE_NAME = "exchange-generator" // название образа
+        IMAGE_NAME = "bank-app-exchange-generator" // название образа
         MODULE_NAME = "exchange-generator" // папка модуля
     }
 

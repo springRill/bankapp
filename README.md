@@ -67,8 +67,13 @@ minikube delete minikube
 - должен быть установлен docker
 - включить в докере "Settingd -> Ggeneral -> Expose daemon on tcp://localhost:2375 without TLS"
 - запускаем в консоли `minikube start --driver=docker`
-- заменяем MINIKUBE_PATH в jenkins/.env
-- исполняем jenkins/docker-compose.yml
+- заменяем `MINIKUBE_PATH` в `jenkins/.env`
+- исполняем `jenkins/docker-compose.yml`
 - запускаем в консоли `docker network connect minikube jenkins`
 
-
+## запускаем последовательно сборки в jenkins
+- keycloak
+- postgresql
+- exchange-api
+- exchange-generator
+- 

@@ -3,10 +3,19 @@ pipeline {
 
     environment {
         SHARED_REPO = '../shared/bankapp' // рабочая папка на jenkins
-        IMAGE_NAME = "keycloak" // название образа
+        IMAGE_NAME = "bank-app-keycloak" // название образа
     }
 
     stages {
+        stage('Get from github') {
+            steps {
+                dir("${SHARED_REPO}") {
+                    echo 'get'
+                    git branch: 'jenkins-test', url: 'https://github.com/springRill/bankapp.git'
+                }
+            }
+        }
+
         stage('Deploy Keycloak') {
             steps {
                 dir("${SHARED_REPO}/bank-app/charts/${IMAGE_NAME}") {
