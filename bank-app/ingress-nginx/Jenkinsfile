@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Deploy ingress-nginx') {
+            steps {
+                script {
+                    sh """
+                    # Добавляем репозиторий (если он ещё не добавлен)
+                    helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx || true
+                    helm repo update
+
+                    # Устанавливаем или обновляем ingress-nginx
+                    helm upgrade --install bank-app-ingress-nginx ingress-nginx/ingress-nginx \
+                      --namespace default \
+                      --create-namespace \
+                      --version 4.13.1
+                    """
+                }
+            }
+        }
+    }
+}

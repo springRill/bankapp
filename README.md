@@ -72,8 +72,15 @@ minikube delete minikube
 - запускаем в консоли `docker network connect minikube jenkins`
 
 ## запускаем последовательно сборки в jenkins
+- ingress-nginx
 - keycloak
 - postgresql
 - exchange-api
 - exchange-generator
-- 
+- blocker-api
+- notifications-api
+- accounts-api
+- transfer-api
+- cash-api
+- front-ui
+

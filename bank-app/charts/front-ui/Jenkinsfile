@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SHARED_REPO = '../shared/bankapp' // рабочая папка на jenkins
-        IMAGE_NAME = "bank-app-front-ui" // название образа
+        IMAGE_NAME = "front-ui" // название образа
         MODULE_NAME = "front-ui" // папка модуля
     }
 
@@ -79,10 +79,15 @@ pipeline {
             steps {
                 dir("${SHARED_REPO}/bank-app/charts/${IMAGE_NAME}") {
                     sh """
-                    helm upgrade --install ${IMAGE_NAME} . \
+                    helm upgrade --install bank-app-${IMAGE_NAME} . \
                       --values ../../values.yaml \
                       --set image.repository=${DOCKER_REGISTRY}/${IMAGE_NAME} \
-                      --set imagePullSecrets[0].name=ghcr-secret
+                      --set imagePullSecrets[0].name=ghcr-secret \
+                      --set ingress.enabled=true \
+                      --set ingress.className=nginx \
+                      --set ingress.hosts[0].host=bankapp \
+                      --set ingress.hosts[0].paths[0].path=/ \
+                      --set ingress.hosts[0].paths[0].pathType=Prefix
                     """
                 }
             }

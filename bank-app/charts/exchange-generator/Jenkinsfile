@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SHARED_REPO = '../shared/bankapp' // рабочая папка на jenkins
-        IMAGE_NAME = "bank-app-exchange-generator" // название образа
+        IMAGE_NAME = "exchange-generator" // название образа
         MODULE_NAME = "exchange-generator" // папка модуля
     }
 
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 dir("${SHARED_REPO}/bank-app/charts/${IMAGE_NAME}") {
                     sh """
-                    helm upgrade --install ${IMAGE_NAME} . \
+                    helm upgrade --install bank-app-${IMAGE_NAME} . \
                       --values ../../values.yaml \
                       --set image.repository=${DOCKER_REGISTRY}/${IMAGE_NAME} \
                       --set imagePullSecrets[0].name=ghcr-secret
