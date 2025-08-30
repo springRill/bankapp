@@ -1,7 +1,4 @@
 dependencies:
-- name: ingress-nginx
-  repository: https://kubernetes.github.io/ingress-nginx
-  version: 4.13.1
 - name: keycloak
   repository: file://./charts/keycloak
   version: 0.1.0
@@ -29,5 +26,5 @@ dependencies:
 - name: front-ui
   repository: file://./charts/front-ui
   version: 0.1.0
-digest: sha256:73af117f6c5c3257eac1d58a61e5a12863012ee607afba324327d8f24f2c050a
-generated: "2025-08-24T20:28:24.2585165+03:00"
+digest: sha256:45beae78f9febdb25760c381d99bc7b4cf9ccfe0f50728c0f922ee91023289f6
+generated: "2025-08-30T13:37:26.574189791Z"
