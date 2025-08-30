@@ -68,19 +68,23 @@ minikube delete minikube
 - включить в докере "Settingd -> Ggeneral -> Expose daemon on tcp://localhost:2375 without TLS"
 - запускаем в консоли `minikube start --driver=docker`
 - заменяем `MINIKUBE_PATH` в `jenkins/.env`
+- приписываем `GHCR_TOKEN` в `jenkins/.env`
 - исполняем `jenkins/docker-compose.yml`
 - запускаем в консоли `docker network connect minikube jenkins`
 
-## запускаем последовательно сборки в jenkins
-- ingress-nginx
-- keycloak
-- postgresql
-- exchange-api
-- exchange-generator
-- blocker-api
-- notifications-api
-- accounts-api
-- transfer-api
-- cash-api
-- front-ui
+## для запуска приложения отдельными чартами запускаем последовательно сборки в jenkins
+- 01_ingress-nginx
+- 02_keycloak
+- 03_postgresql
+- 04_exchange-api
+- 05_exchange-generator
+- 06_blocker-api
+- 07_notifications-api
+- 08_accounts-api
+- 09_transfer-api
+- 10_cash-api
+- 11_front-ui
 
+## запускаем в консоли
+- `minikube tunnel`
+- приложение будет доступно в браузере http://bankapp/
