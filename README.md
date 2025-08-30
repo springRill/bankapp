@@ -23,6 +23,9 @@
 #### запускаем minikube и установливаем окружение
 
 - `minikube start --driver=docker`
+- `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
+- `helm repo update`
+- `helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx   --namespace ingress-nginx --create-namespace`
 - `minikube docker-env | Invoke-Expression`
 
 #### собираем docker контейнеры
@@ -58,33 +61,38 @@
 #### останавливаем приложение
 `helm uninstall bank-app`
 
-#### удаляем 
-minikube delete minikube
-
 
 ## запуск jenkins (Windows 10)
 
-- должен быть установлен docker
 - включить в докере "Settingd -> Ggeneral -> Expose daemon on tcp://localhost:2375 without TLS"
-- запускаем в консоли `minikube start --driver=docker`
 - заменяем `MINIKUBE_PATH` в `jenkins/.env`
 - приписываем `GHCR_TOKEN` в `jenkins/.env`
-- исполняем `jenkins/docker-compose.yml`
+- исполняем `jenkins/docker-compose.yml` jenkins будет доступен по адресу http://localhost:9090/
 - запускаем в консоли `docker network connect minikube jenkins`
 
-## для запуска приложения отдельными чартами запускаем последовательно сборки в jenkins
-- 01_ingress-nginx
-- 02_keycloak
-- 03_postgresql
-- 04_exchange-api
-- 05_exchange-generator
-- 06_blocker-api
-- 07_notifications-api
-- 08_accounts-api
-- 09_transfer-api
-- 10_cash-api
-- 11_front-ui
+### для запуска приложения отдельными чартами в default namespace запускаем последовательно сборки в jenkins
+- 01_keycloak
+- 02_postgresql
+- 03_exchange-api
+- 04_exchange-generator
+- 05_blocker-api
+- 06_notifications-api
+- 07_accounts-api
+- 08_transfer-api
+- 09_cash-api
+- 10_front-ui
 
-## запускаем в консоли
+### запускаем в консоли
 - `minikube tunnel`
 - приложение будет доступно в браузере http://bankapp/
+
+### для запуска приложения полностью в test и, опционально drod namespace запускаем в jenkins
+- 00_bank-app
+
+### прописываем в `etc/hosts`
+- `127.0.0.1 bankapp-test`
+- `127.0.0.1 bankapp-prod`
+
+### приложение будет доступно в браузере
+- тестовое  http://bankapp-test/
+- продуктовое  http://bankapp-prod/

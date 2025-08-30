@@ -9,6 +9,7 @@ def branchName = "helm-and-jenkins"
 
 // Массив с описанием пайплайнов
 def jobs = [
+        [name: "00_bank-app",    path: "bank-app/Jenkinsfile"],
         [name: "01_keycloak",    path: "bank-app/charts/keycloak/Jenkinsfile"],
         [name: "02_postgresql",    path: "bank-app/postgresql/Jenkinsfile"],
         [name: "03_exchange-api", path: "bank-app/charts/exchange-api/Jenkinsfile"],
