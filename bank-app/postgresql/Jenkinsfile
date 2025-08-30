@@ -15,7 +15,8 @@ pipeline {
                           --namespace default \
                           --set auth.username=postgres \
                           --set auth.password=admin \
-                          --set auth.database=bank
+                          --set auth.database=bank \
+                          --version 14.2.3
                     '''
                 }
             }
