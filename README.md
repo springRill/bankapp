@@ -67,6 +67,8 @@
 - включить в докере "Settingd -> Ggeneral -> Expose daemon on tcp://localhost:2375 without TLS"
 - заменяем `MINIKUBE_PATH` в `jenkins/.env`
 - приписываем `GHCR_TOKEN` в `jenkins/.env`
+- приписываем `GITHUB_USERNAME` в `jenkins/.env`
+- приписываем `DOCKER_REGISTRY` в `jenkins/.env`
 - исполняем `jenkins/docker-compose.yml` jenkins будет доступен по адресу http://localhost:9090/
 - запускаем в консоли `docker network connect minikube jenkins`
 
