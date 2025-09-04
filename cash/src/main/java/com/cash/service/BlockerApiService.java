@@ -10,7 +10,8 @@ public class BlockerApiService {
 
     private final RestClient blockerServiceClient;
 
-    public BlockerApiService(RestClient.Builder builder, @Value("${appservices.blocker-api:http://blocker-api/api}") String baseUrl) {
+//    public BlockerApiService(RestClient.Builder builder, @Value("${appservices.blocker-api:http://blocker-api/api}") String baseUrl) {
+    public BlockerApiService(RestClient.Builder builder, @Value("${appservices.blocker-api:http://localhost:8087/api}") String baseUrl) {
         this.blockerServiceClient = builder.baseUrl(baseUrl).build();
     }
 

@@ -3,6 +3,7 @@ package com.account.controller;
 import com.account.dto.*;
 import com.account.service.AccountService;
 import com.account.service.NotificationsApiService;
+import com.account.service.NotificationsProducer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,12 @@ public class AccountController {
 
     private final NotificationsApiService notificationsApiService;
 
-    public AccountController(AccountService accountService, NotificationsApiService notificationsApiService) {
+    private final NotificationsProducer notificationsProducer;
+
+    public AccountController(AccountService accountService, NotificationsApiService notificationsApiService, NotificationsProducer notificationsProducer) {
         this.accountService = accountService;
         this.notificationsApiService = notificationsApiService;
+        this.notificationsProducer = notificationsProducer;
     }
 
     @GetMapping("/users")
@@ -49,7 +53,8 @@ public class AccountController {
     @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ACCOUNT')")
     public UserDto saveUser(@RequestBody UserDto userDto) {
-        notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), userDto.toString()));
+//        notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), userDto.toString()));
+        notificationsProducer.notificate(new NotificationDto(userDto.getUsername(), userDto.toString()));
 
         return accountService.saveUser(userDto);
     }
@@ -65,7 +70,8 @@ public class AccountController {
     @PreAuthorize("hasRole('ROLE_ACCOUNT')")
     public AccountDto saveAccount(@RequestBody AccountDto accountDto) {
         NotificationDto notificationDto = new NotificationDto(accountService.getUserById(accountDto.getUserId()).getUsername(), accountDto.toString());
-        notificationsApiService.notificate(notificationDto);
+//        notificationsApiService.notificate(notificationDto);
+        notificationsProducer.notificate(notificationDto);
 
         return accountService.saveAccount(accountDto);
     }

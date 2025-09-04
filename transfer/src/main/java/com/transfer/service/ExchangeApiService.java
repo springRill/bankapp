@@ -11,7 +11,8 @@ public class ExchangeApiService {
 
     private final RestClient exchangeServiceClient;
 
-    public ExchangeApiService(RestClient.Builder builder, @Value("${appservices.exchange-api:http://exchange-api/api}") String baseUrl) {
+//    public ExchangeApiService(RestClient.Builder builder, @Value("${appservices.exchange-api:http://exchange-api/api}") String baseUrl) {
+    public ExchangeApiService(RestClient.Builder builder, @Value("${appservices.exchange-api:http://localhost:8084/api}") String baseUrl) {
         this.exchangeServiceClient = builder.baseUrl(baseUrl).build();
     }
 

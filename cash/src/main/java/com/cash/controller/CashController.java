@@ -6,6 +6,7 @@ import com.cash.dto.UserDto;
 import com.cash.service.AccountsApiService;
 import com.cash.service.BlockerApiService;
 import com.cash.service.NotificationsApiService;
+import com.cash.service.NotificationsProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +22,14 @@ public class CashController {
 
     private final NotificationsApiService notificationsApiService;
 
+    private final NotificationsProducer notificationsProducer;
+
     private final BlockerApiService blockerApiService;
 
-    public CashController(AccountsApiService accountsApiService, NotificationsApiService notificationsApiService, BlockerApiService blockerApiService) {
+    public CashController(AccountsApiService accountsApiService, NotificationsApiService notificationsApiService, NotificationsProducer notificationsProducer, BlockerApiService blockerApiService) {
         this.accountsApiService = accountsApiService;
         this.notificationsApiService = notificationsApiService;
+        this.notificationsProducer = notificationsProducer;
         this.blockerApiService = blockerApiService;
     }
 
@@ -36,7 +40,9 @@ public class CashController {
             throw new OperationsException("Операция заблокирована блокировщиком");
         }
         UserDto userDto = accountsApiService.getUserById(cashDto.getUserId());
-        notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), cashDto.toString()));
+//        notificationsApiService.notificate(new NotificationDto(userDto.getUsername(), cashDto.toString()));
+        notificationsProducer.notificate(new NotificationDto(userDto.getUsername(), cashDto.toString()));
+
         accountsApiService.cash(cashDto);
     }
 
