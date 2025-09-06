@@ -3,10 +3,7 @@ package com.transfer.contracts;
 import com.transfer.controller.TransferController;
 import com.transfer.dto.CurrencyEnum;
 import com.transfer.dto.UserDto;
-import com.transfer.service.AccountsApiService;
-import com.transfer.service.BlockerApiService;
-import com.transfer.service.ExchangeApiService;
-import com.transfer.service.NotificationsApiService;
+import com.transfer.service.*;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -34,6 +31,9 @@ public abstract class BaseContractTest {
 
     @MockitoBean
     private NotificationsApiService notificationsApiService;
+
+    @MockitoBean
+    private NotificationsProducer notificationsProducer;
 
     @MockitoBean
     private BlockerApiService blockerApiService;
