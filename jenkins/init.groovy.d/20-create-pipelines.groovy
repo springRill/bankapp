@@ -10,15 +10,16 @@ def branchName = "helm-and-jenkins"
 // Массив с описанием пайплайнов
 def jobs = [
         [name: "00_bank-app",    path: "bank-app/Jenkinsfile"],
-        [name: "01_keycloak",    path: "bank-app/charts/keycloak/Jenkinsfile"],
-        [name: "02_postgresql",    path: "bank-app/postgresql/Jenkinsfile"],
-        [name: "03_exchange-api", path: "bank-app/charts/exchange-api/Jenkinsfile"],
-        [name: "04_exchange-generator", path: "bank-app/charts/exchange-generator/Jenkinsfile"],
-        [name: "05_blocker-api", path: "bank-app/charts/blocker-api/Jenkinsfile"],
-        [name: "06_notifications-api", path: "bank-app/charts/notifications-api/Jenkinsfile"],
-        [name: "07_accounts-api", path: "bank-app/charts/accounts-api/Jenkinsfile"],
-        [name: "08_transfer-api", path: "bank-app/charts/transfer-api/Jenkinsfile"],
-        [name: "09_cash-api", path: "bank-app/charts/cash-api/Jenkinsfile"],
+        [name: "01_kafka",    path: "bank-app/charts/kafka/Jenkinsfile"],
+        [name: "02_keycloak",    path: "bank-app/charts/keycloak/Jenkinsfile"],
+        [name: "03_postgresql",    path: "bank-app/postgresql/Jenkinsfile"],
+        [name: "04_exchange-api", path: "bank-app/charts/exchange-api/Jenkinsfile"],
+        [name: "05_exchange-generator", path: "bank-app/charts/exchange-generator/Jenkinsfile"],
+        [name: "06_blocker-api", path: "bank-app/charts/blocker-api/Jenkinsfile"],
+        [name: "07_notifications-api", path: "bank-app/charts/notifications-api/Jenkinsfile"],
+        [name: "08_accounts-api", path: "bank-app/charts/accounts-api/Jenkinsfile"],
+        [name: "09_transfer-api", path: "bank-app/charts/transfer-api/Jenkinsfile"],
+        [name: "10_cash-api", path: "bank-app/charts/cash-api/Jenkinsfile"],
         [name: "11_front-ui",  path: "bank-app/charts/front-ui/Jenkinsfile"]
 ]
 

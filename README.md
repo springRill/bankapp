@@ -3,16 +3,17 @@
 ## приложение состоит из частей:
 
 1. postgresql
-2. nginx
-3. keycloak с конфигурацией
-4. notifications - сервис уведомлений
-5. blocker - сервис блокировки операций
-6. exchenge-generator - приложение для генерации курсов валют
-7. exchange - сервис хранения курсов валют
-8. cash - сервис ввода и вывода наличных
-9. transfer - сервис перевода денег между счетами
-10. accounts - сервис хранения информации о пользователях и счетах
-11. front-ui - веб-приложение с клиентским HTML-интерфейсом
+2. kafka
+3. nginx
+4. keycloak с конфигурацией
+5. notifications - сервис уведомлений
+6. blocker - сервис блокировки операций
+7. exchenge-generator - приложение для генерации курсов валют
+8. exchange - сервис хранения курсов валют
+9. cash - сервис ввода и вывода наличных
+10. transfer - сервис перевода денег между счетами
+11. accounts - сервис хранения информации о пользователях и счетах
+12. front-ui - веб-приложение с клиентским HTML-интерфейсом
 
 ## запуск в зонтичным helm чартом (Windows 10)
 - упаковать все модули мавеном (package)
@@ -73,16 +74,17 @@
 - запускаем в консоли `docker network connect minikube jenkins`
 
 ### для запуска приложения отдельными чартами в default namespace запускаем последовательно сборки в jenkins
-- 01_keycloak
-- 02_postgresql
-- 03_exchange-api
-- 04_exchange-generator
-- 05_blocker-api
-- 06_notifications-api
-- 07_accounts-api
-- 08_transfer-api
-- 09_cash-api
-- 10_front-ui
+- 01_kafka
+- 02_keycloak
+- 03_postgresql
+- 04_exchange-api
+- 05_exchange-generator
+- 06_blocker-api
+- 07_notifications-api
+- 08_accounts-api
+- 09_transfer-api
+- 10_cash-api
+- 11_front-ui
 
 ### запускаем в консоли
 - `minikube tunnel`
