@@ -5,7 +5,7 @@ import org.jenkinsci.plugins.workflow.cps.*
 
 // Общие настройки
 def repoUrl = "https://github.com/springRill/bankapp.git"
-def branchName = "helm-and-jenkins"
+def branchName = "kafka"
 
 // Массив с описанием пайплайнов
 def jobs = [
