@@ -2,6 +2,7 @@ package com.exchange.kafka;
 
 import com.exchange.dto.CurrencyEnum;
 import com.exchange.dto.ExchangeDto;
+import com.exchange.repository.ExchangeRepository;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.Duration;
 import java.util.List;
@@ -24,7 +29,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @EmbeddedKafka(topics = {"exchange"})
-public class КafkaTest {
+@TestPropertySource(properties = {
+        "spring.main.web-application-type=none",
+        "spring.autoconfigure.exclude=" +
+                "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration," +
+                "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration," +
+                "org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration," +
+                "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
+})
+public class KafkaTest {
+
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
+    @MockitoBean
+    private ExchangeRepository exchangeRepository;
+
+    @MockitoBean
+    private SecurityFilterChain securityFilterChain;
 
     @Autowired
     private KafkaTemplate<String, ExchangeDto> kafkaTemplate;

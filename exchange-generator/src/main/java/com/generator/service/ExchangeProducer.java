@@ -26,7 +26,7 @@ public class ExchangeProducer {
     public void setExchange(ExchangeDto exchangeDto) {
         String token = tokenProvider.getAccessToken();
 
-        System.out.println("token=" + token);
+//        System.out.println("token=" + token);
 
         ProducerRecord<String, ExchangeDto> record = new ProducerRecord<>("exchange", exchangeDto.getCurrency().name(), exchangeDto);
         record.headers().add("Authorization", ("Bearer " + token).getBytes(StandardCharsets.UTF_8));

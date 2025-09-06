@@ -27,6 +27,10 @@ public class ExchangeConsumer {
 
     @KafkaListener(topics = "exchange", groupId = "exchange-group")
     public void consume(ExchangeDto exchangeDto, @Header("Authorization") String authorizationHeader) {
+//    @KafkaListener(topics = "exchange", groupId = "exchange-group")
+//    public void consume(ExchangeDto exchangeDto) {
+        System.out.println("Received exchange message: " + exchangeDto);
+//        System.out.println("Received exchange message: " + exchangeDto + " with token: " + authorizationHeader);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             System.err.println("JWT token is missing");
             return;

@@ -1,0 +1,53 @@
+replicaCount: 1
+
+image:
+  repository: apache/kafka
+  tag: "4.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - name: client
+      port: 9092
+    - name: controller
+      port: 29093
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+
+env:
+  CLUSTER_ID: "cluster-id"
+  KAFKA_BROKER_ID: 1
+  KAFKA_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:29093"
+#  KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://bank-app-kafka:9092"
+#  KAFKA_CONTROLLER_QUORUM_VOTERS: "1@bank-app-kafka:29093"
+  KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://bank-app-kafka:9092,CONTROLLER://localhost:29093"
+  KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:29093"
+  KAFKA_PROCESS_ROLES: "broker,controller"
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+  KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+
+  KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: "0"
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+  KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+  KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+
+livenessProbe:
+  tcpSocket:
+    port: 9092
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  tcpSocket:
+    port: 9092
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+serviceAccount:
+  create: true
+  name: ""
