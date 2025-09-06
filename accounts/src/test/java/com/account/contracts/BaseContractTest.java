@@ -7,6 +7,7 @@ import com.account.dto.TransferDto;
 import com.account.dto.UserDto;
 import com.account.service.AccountService;
 import com.account.service.NotificationsApiService;
+import com.account.service.NotificationsProducer;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -35,6 +36,9 @@ public abstract class BaseContractTest {
 
     @MockitoBean
     private NotificationsApiService notificationsApiService;
+
+    @MockitoBean
+    private NotificationsProducer notificationsProducer;
 
     @BeforeEach
     public void setup() throws AccountNotFoundException, OperationsException {
