@@ -1,6 +1,19 @@
 server:
   port: 8082
 
+management:
+  zipkin:
+    tracing:
+      endpoint:  http://127.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
 spring:
   application:
     name: cash-api

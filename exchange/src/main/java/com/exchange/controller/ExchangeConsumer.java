@@ -2,6 +2,9 @@ package com.exchange.controller;
 
 import com.exchange.dto.ExchangeDto;
 import com.exchange.service.ExchangeService;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -20,38 +23,58 @@ public class ExchangeConsumer {
 
     private final ExchangeService exchangeService;
 
-    public ExchangeConsumer(JwtDecoder jwtDecoder, ExchangeService exchangeService) {
+    private final Tracer tracer;
+
+    public ExchangeConsumer(JwtDecoder jwtDecoder, ExchangeService exchangeService, Tracer tracer) {
         this.jwtDecoder = jwtDecoder;
         this.exchangeService = exchangeService;
+        this.tracer = tracer;
     }
 
     @KafkaListener(topics = "exchange", groupId = "exchange-group")
-    public void consume(ExchangeDto exchangeDto, @Header("Authorization") String authorizationHeader) {
-//    @KafkaListener(topics = "exchange", groupId = "exchange-group")
-//    public void consume(ExchangeDto exchangeDto) {
-        System.out.println("Received exchange message: " + exchangeDto);
-//        System.out.println("Received exchange message: " + exchangeDto + " with token: " + authorizationHeader);
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            System.err.println("JWT token is missing");
-            return;
+    public void consume(ConsumerRecord<String, ExchangeDto> record,
+                        @Header("Authorization") String authorizationHeader) {
+
+        // Создаём новый спан и устанавливаем parent, если TraceId пришёл в заголовках
+        Span span = tracer.nextSpan().name("kafka-consumer");
+        String traceIdHeader = record.headers().lastHeader("b3") != null ?
+                new String(record.headers().lastHeader("b3").value()) : null;
+
+        // Если пришёл traceId, можно назначить его родителем
+        if (traceIdHeader != null) {
+            // Micrometer/Brave умеет автоматически подтягивать parent через пропагаторы
         }
 
-        String token = authorizationHeader.substring(7);
+        try (Tracer.SpanInScope ws = tracer.withSpan(span.start())) {
 
-        try {
+            // Теги спана
+            span.tag("kafka.topic", record.topic());
+            span.tag("kafka.key", record.key());
+
+            // JWT проверка
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                span.tag("kafka.jwt", "missing");
+                return;
+            }
+
+            String token = authorizationHeader.substring(7);
             Jwt jwt = jwtDecoder.decode(token);
 
             List<String> roles = ((Map<String, List<String>>) jwt.getClaim("realm_access")).get("roles");
             if (roles == null || !roles.contains("ROLE_EXCHANGE")) {
-                System.err.println("User does not have ROLE_EXCHANGE");
+                span.tag("kafka.jwt", "no_role_exchange");
                 return;
             }
 
-            System.out.println("Received exchange message: " + exchangeDto);
-            exchangeService.setExchange(exchangeDto);
+            span.event("kafka.processed.success");
+
+            exchangeService.setExchange(record.value());
 
         } catch (JwtException e) {
-            System.err.println("Invalid JWT: " + e.getMessage());
+            span.tag("kafka.jwt", "invalid");
+            span.tag("kafka.error", e.getMessage());
+        } finally {
+            span.end();
         }
     }
 }

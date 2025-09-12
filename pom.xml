@@ -7,12 +7,18 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
+<!--
+        <version>3.4.4</version>
+-->
         <version>3.5.3</version>
     </parent>
 
     <properties>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-cloud-contract.version>5.0.0-M1</spring-cloud-contract.version>
+<!--
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+-->
     </properties>
 
     <groupId>com</groupId>
@@ -91,6 +97,33 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+<!--
+        Мост между Micrometer и Brave
+-->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+<!--
+        Библиотека для отправки спанов в zipkin
+-->
+        <dependency>
+            <groupId>io.zipkin.reporter2</groupId>
+            <artifactId>zipkin-reporter-brave</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter</artifactId>
+        </dependency>
+-->
     </dependencies>
 
     <dependencyManagement>
