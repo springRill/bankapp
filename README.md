@@ -2,18 +2,21 @@
 
 ## приложение состоит из частей:
 
-1. postgresql
-2. kafka
-3. nginx
-4. keycloak с конфигурацией
-5. notifications - сервис уведомлений
-6. blocker - сервис блокировки операций
-7. exchenge-generator - приложение для генерации курсов валют
-8. exchange - сервис хранения курсов валют
-9. cash - сервис ввода и вывода наличных
-10. transfer - сервис перевода денег между счетами
-11. accounts - сервис хранения информации о пользователях и счетах
-12. front-ui - веб-приложение с клиентским HTML-интерфейсом
+1. zipkin
+2. prometheus с алертами
+3. grafana с дашбордами
+4. postgresql
+5. kafka
+6. nginx
+7. keycloak с конфигурацией
+8. notifications - сервис уведомлений
+9. blocker - сервис блокировки операций
+10. exchenge-generator - приложение для генерации курсов валют
+11. exchange - сервис хранения курсов валют
+12. cash - сервис ввода и вывода наличных
+13. transfer - сервис перевода денег между счетами
+14. accounts - сервис хранения информации о пользователях и счетах
+15. front-ui - веб-приложение с клиентским HTML-интерфейсом
 
 ## запуск в зонтичным helm чартом (Windows 10)
 - упаковать все модули мавеном (package)
@@ -23,8 +26,11 @@
 
 #### запускаем minikube и установливаем окружение
 
-- `minikube start --driver=docker`
+- `minikube start --driver=docker`  minikube start --driver=docker --memory=8192
 - `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
+- `helm repo add zipkin https://zipkin.io/zipkin-helm`
+- `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
+- `helm repo add grafana https://grafana.github.io/helm-charts`
 - `helm repo update`
 - `helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx   --namespace ingress-nginx --create-namespace`
 - `minikube docker-env | Invoke-Expression`
@@ -55,9 +61,26 @@
 `kubectl port-forward svc/bank-app-front-ui 8080:8080` \
 и запустить приложение в браузере http://localhost:8080/
 
-а можно прописать в `etc/hosts` `127.0.0.1 bankapp` \
+прописываем в `etc/hosts`
+- `127.0.0.1 bankapp`
+- `127.0.0.1 zipkin`
+- `127.0.0.1 prometheus`
+- `127.0.0.1 grafana` \
 запустить в консоли `minikube tunnel` \
-и запустить приложение в браузере http://bankapp/
+приложение http://bankapp/ \
+зипкин http://zipkin/ \
+прометеус http://prometheus/ \
+графана http://grafana/ 
+
+в приложении настроены кастомные метрики
+- user_login_success_total - количество успешных логинов пользователя
+- user_login_failure_total - количество неуспешных логинов пользователя
+- transfer_failure_total - количество неуспешных попыток перевода денег
+- transfer_blocker_total - количество заблокированных попыток перевода денег
+- cash_blocker_total - количество заблокированных операций с наличными
+
+в прометеус настроены алерты \
+в графане настроены дашборды
 
 #### останавливаем приложение
 `helm uninstall bank-app`

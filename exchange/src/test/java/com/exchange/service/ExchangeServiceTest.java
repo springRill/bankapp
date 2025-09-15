@@ -2,11 +2,13 @@ package com.exchange.service;
 import com.exchange.domain.Exchange;
 import com.exchange.dto.CurrencyEnum;
 import com.exchange.dto.ExchangeDto;
+import com.exchange.metrics.CustomMetrics;
 import com.exchange.repository.ExchangeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Import(ExchangeService.class)
 public class ExchangeServiceTest {
+
+    @MockitoBean
+    private CustomMetrics customMetrics;
 
     @Autowired
     private ExchangeService exchangeService;

@@ -1,6 +1,7 @@
 package com.front.controller;
 
 import com.front.dto.*;
+import com.front.metrics.CustomMetrics;
 import com.front.service.AccountsApiService;
 import com.front.service.CashApiService;
 import com.front.service.TransferApiService;
@@ -35,12 +36,15 @@ public class UserController {
 
     private final TransferApiService transferApiService;
 
-    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService, CashApiService cashApiService, TransferApiService transferApiService) {
+    private final CustomMetrics customMetrics;
+
+    public UserController(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, AccountsApiService accountsApiService, CashApiService cashApiService, TransferApiService transferApiService, CustomMetrics customMetrics) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
         this.accountsApiService = accountsApiService;
         this.cashApiService = cashApiService;
         this.transferApiService = transferApiService;
+        this.customMetrics = customMetrics;
     }
 
     @PostMapping("/{login}/editPassword")
@@ -75,9 +79,9 @@ public class UserController {
 
         UserDto userDto = accountsApiService.getUserByName(login);
 
-        if(Period.between(birthdate, LocalDate.now()).getYears() < 18){
+        if (Period.between(birthdate, LocalDate.now()).getYears() < 18) {
             userAccountsErrors.add("Вам должно быть больше 18 лет");
-        }else {
+        } else {
             userDto.setPersonName(name);
             userDto.setDateOfBirth(birthdate);
             accountsApiService.saveUser(userDto);
@@ -88,9 +92,9 @@ public class UserController {
                     AccountDto accountDto = accountsApiService.getAccountByUserAndCurrency(userDto.getId(), currency);
                     if (accountDto.getExists()) {
                         if (Objects.isNull(selectedCurrencies) || !selectedCurrencies.contains(accountDto.getCurrency().name())) {
-                            if(accountDto.getValue()==0) {
+                            if (accountDto.getValue() == 0) {
                                 accountsApiService.deleteAccount(accountDto);
-                            }else {
+                            } else {
                                 userAccountsErrors.add("Баланс на счету %s не равен 0".formatted(currency.getTitle()));
                             }
                         }
@@ -119,6 +123,9 @@ public class UserController {
         try {
             cashApiService.cash(cashDto);
         } catch (RestClientResponseException restClientResponseException) {
+            if(restClientResponseException.getMessage().equals("409 Conflict: \"Операция заблокирована блокировщиком\"")) {
+                customMetrics.incrementCacsBlocker(login, currency.name());
+            }
             redirectAttributes.addFlashAttribute("cashErrors", List.of(restClientResponseException.getResponseBodyAsString()));
         }
         return "redirect:/main";
@@ -141,7 +148,8 @@ public class UserController {
         ExchangeDto toExchangeDto = new ExchangeDto(toCurrency, null);
         TransferDto transferDto = new TransferDto(fromUserDto.getId(), fromExchangeDto, toExchangeDto, value, toUserDto.getId());
 
-        if(login.equals(toLogin) && fromCurrency.equals(toCurrency)){
+        if (login.equals(toLogin) && fromCurrency.equals(toCurrency)) {
+            customMetrics.incrementFailureTransfer(login, fromCurrency.name(), toLogin, toCurrency.name());
             redirectAttributes.addFlashAttribute("transferErrors", List.of("Перевести можно только между разными счетами"));
             return "redirect:/main";
         }
@@ -149,12 +157,20 @@ public class UserController {
         try {
             transferApiService.transfer(transferDto);
         } catch (RestClientResponseException restClientResponseException) {
-            if(login.equals(toLogin)) {
+            if (login.equals(toLogin)) {
+                if(restClientResponseException.getMessage().equals("409 Conflict: \"Операция заблокирована блокировщиком\"")){
+                    customMetrics.incrementTransferBlocker(login, fromCurrency.name(), toLogin, toCurrency.name());
+                }
                 transferErrors.add(restClientResponseException.getResponseBodyAsString().formatted(toLogin));
-            }else{
+            } else {
                 transferOtherErrors.add(restClientResponseException.getResponseBodyAsString().formatted(toLogin));
             }
         }
+
+        if (!transferErrors.isEmpty() || !transferOtherErrors.isEmpty()) {
+            customMetrics.incrementFailureTransfer(login, fromCurrency.name(), toLogin, toCurrency.name());
+        }
+
         redirectAttributes.addFlashAttribute("transferErrors", transferErrors);
         redirectAttributes.addFlashAttribute("transferOtherErrors", transferOtherErrors);
         return "redirect:/main";

@@ -5,6 +5,17 @@ type: application
 version: 0.1.0
 
 dependencies:
+  - name: zipkin
+    version: "0.4.0"
+    repository: "https://zipkin.io/zipkin-helm"
+
+  - name: prometheus
+    version: "0.1.0"
+    repository: "file://./charts/prometheus"
+
+  - name: grafana
+    version: "0.1.0"
+    repository: "file://./charts/grafana"
 
   - name: kafka
     version: "0.1.0"
@@ -26,23 +37,23 @@ dependencies:
     version: "0.1.0"
     repository: "file://./charts/exchange-generator"
 
-  - name: blocker-api
-    version: "0.1.0"
-    repository: "file://./charts/blocker-api"
+#  - name: blocker-api
+#    version: "0.1.0"
+#    repository: "file://./charts/blocker-api"
 
-  - name: notifications-api
-    version: "0.1.0"
-    repository: "file://./charts/notifications-api"
+#  - name: notifications-api
+#    version: "0.1.0"
+#    repository: "file://./charts/notifications-api"
 
-  - name: transfer-api
-    version: "0.1.0"
-    repository: "file://./charts/transfer-api"
+#  - name: transfer-api
+#    version: "0.1.0"
+#    repository: "file://./charts/transfer-api"
 
-  - name: cash-api
-    version: "0.1.0"
-    repository: "file://./charts/cash-api"
+#  - name: cash-api
+#    version: "0.1.0"
+#    repository: "file://./charts/cash-api"
 
-  - name: front-ui
-    version: "0.1.0"
-    repository: "file://./charts/front-ui"
+#  - name: front-ui
+#    version: "0.1.0"
+#    repository: "file://./charts/front-ui"
 

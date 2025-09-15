@@ -4,7 +4,8 @@ server:
 management:
   zipkin:
     tracing:
-      endpoint:  http://127.0.0.1:9411/api/v2/spans
+      #endpoint:  http://127.0.0.1:9411/api/v2/spans
+      endpoint: ${ZIPKIN_URL:http://127.0.0.1:9411/api/v2/spans}
   tracing:
     sampling:
       probability: 1
