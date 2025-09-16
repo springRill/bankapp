@@ -24,7 +24,7 @@ public class ExchangeService {
     }
 
     public void setExchange(ExchangeDto exchangeDto){
-//        log.info("сохранение курса валюты {}: {}", exchangeDto.getCurrency().name(), exchangeDto.getValue());
+        log.info("сохранение курса валюты {}: {}", exchangeDto.getCurrency().name(), exchangeDto.getValue());
         Exchange exchange = exchangeRepository.findByCurrency(exchangeDto.getCurrency());
         if(Objects.isNull(exchange)){
             exchange = new Exchange();

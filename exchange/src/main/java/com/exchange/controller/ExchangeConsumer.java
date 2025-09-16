@@ -4,6 +4,7 @@ import com.exchange.dto.ExchangeDto;
 import com.exchange.service.ExchangeService;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.propagation.Propagator;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -25,33 +27,31 @@ public class ExchangeConsumer {
 
     private final Tracer tracer;
 
-    public ExchangeConsumer(JwtDecoder jwtDecoder, ExchangeService exchangeService, Tracer tracer) {
+    private final Propagator propagator;
+
+    public ExchangeConsumer(JwtDecoder jwtDecoder, ExchangeService exchangeService, Tracer tracer, Propagator propagator) {
         this.jwtDecoder = jwtDecoder;
         this.exchangeService = exchangeService;
         this.tracer = tracer;
+        this.propagator = propagator;
     }
 
     @KafkaListener(topics = "exchange", groupId = "exchange-group")
-    public void consume(ConsumerRecord<String, ExchangeDto> record,
-                        @Header("Authorization") String authorizationHeader) {
+    public void consume(ConsumerRecord<String, ExchangeDto> record, @Header("Authorization") String authorizationHeader) {
 
-        // Создаём новый спан и устанавливаем parent, если TraceId пришёл в заголовках
-        Span span = tracer.nextSpan().name("kafka-consumer");
-        String traceIdHeader = record.headers().lastHeader("b3") != null ?
-                new String(record.headers().lastHeader("b3").value()) : null;
+        Span.Builder extractedSpanBuilder = propagator.extract(record.headers(), (headers, key) -> {
+            if (headers.lastHeader(key) != null) {
+                return new String(headers.lastHeader(key).value(), StandardCharsets.UTF_8);
+            }
+            return null;
+        });
 
-        // Если пришёл traceId, можно назначить его родителем
-        if (traceIdHeader != null) {
-            // Micrometer/Brave умеет автоматически подтягивать parent через пропагаторы
-        }
+        Span span = extractedSpanBuilder.name("kafka-consumer").start();
 
-        try (Tracer.SpanInScope ws = tracer.withSpan(span.start())) {
-
-            // Теги спана
+        try (Tracer.SpanInScope ws = tracer.withSpan(span)) {
             span.tag("kafka.topic", record.topic());
             span.tag("kafka.key", record.key());
 
-            // JWT проверка
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 span.tag("kafka.jwt", "missing");
                 return;

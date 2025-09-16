@@ -2,6 +2,9 @@ package com.cash.service;
 
 import com.cash.configuration.OAuth2TokenProvider;
 import com.cash.dto.NotificationDto;
+import io.micrometer.tracing.Span;
+import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.propagation.Propagator;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -15,19 +18,31 @@ public class NotificationsProducer {
 
     private final KafkaTemplate<String, NotificationDto> kafkaTemplate;
 
+    private final Tracer tracer;
 
-    public NotificationsProducer(OAuth2TokenProvider tokenProvider, KafkaTemplate<String, NotificationDto> kafkaTemplate) {
+    private final Propagator propagator;
+
+    public NotificationsProducer(OAuth2TokenProvider tokenProvider, KafkaTemplate<String, NotificationDto> kafkaTemplate, Tracer tracer, Propagator propagator) {
         this.tokenProvider = tokenProvider;
         this.kafkaTemplate = kafkaTemplate;
+        this.tracer = tracer;
+        this.propagator = propagator;
     }
 
     public void notificate(NotificationDto notificationDto) {
         String token = tokenProvider.getAccessToken();
 
-        System.out.println("token=" + token);
+//        System.out.println("token=" + token);
 
         ProducerRecord<String, NotificationDto> record = new ProducerRecord<>("notification", notificationDto.getLogin(), notificationDto);
         record.headers().add("Authorization", ("Bearer " + token).getBytes(StandardCharsets.UTF_8));
+
+        Span currentSpan = tracer.currentSpan();
+        if (currentSpan != null) {
+            propagator.inject(currentSpan.context(), record.headers(), (headers, key, value) -> {
+                headers.add(key, value.getBytes(StandardCharsets.UTF_8));
+            });
+        }
 
         kafkaTemplate.send(record);
     }
