@@ -3,6 +3,7 @@ package com.front.controller;
 import com.front.dto.UserDto;
 import com.front.service.AccountsApiService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/signup")
+@Slf4j
 public class SignUpController {
 
     private final PasswordEncoder passwordEncoder;
@@ -83,6 +85,7 @@ public class SignUpController {
             return "signup";
         }
         authenticateUser(login, request);
+        log.info("Создан новый аккаунт {}: ", login);
         return "redirect:/main";
     }
 

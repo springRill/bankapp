@@ -2,9 +2,11 @@ package com.notifications.service;
 
 import com.notifications.dto.NotificationDto;
 import com.notifications.metrics.CustomMetrics;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NotificationsService {
 
     private Integer notificationCount = 0;
@@ -21,6 +23,7 @@ public class NotificationsService {
             customMetrics.incrementFailureNotifications(notificationDto.getLogin());
             return;
         }
-        System.out.printf("Уведомление для пользователя %s: %s%n", notificationDto.getLogin(), notificationDto.getMessage());
+        log.info("Уведомление для пользователя {}: {}", notificationDto.getLogin(), notificationDto.getMessage());
+//        System.out.printf("Уведомление для пользователя %s: %s%n", notificationDto.getLogin(), notificationDto.getMessage());
     }
 }

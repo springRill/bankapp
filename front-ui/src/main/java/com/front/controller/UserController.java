@@ -6,6 +6,7 @@ import com.front.service.AccountsApiService;
 import com.front.service.CashApiService;
 import com.front.service.TransferApiService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     private final PasswordEncoder passwordEncoder;
@@ -64,7 +66,7 @@ public class UserController {
         userDto = accountsApiService.saveUser(userDto);
 
         authenticateUser(userDto.getUsername(), request);
-
+        log.info("Пользователь {} изменил пароль", login);
         return "redirect:/main";
     }
 
@@ -122,6 +124,7 @@ public class UserController {
 
         try {
             cashApiService.cash(cashDto);
+            log.info("Операция с наличностью {}: {} {}", login, value, currency.name());
         } catch (RestClientResponseException restClientResponseException) {
             if(restClientResponseException.getMessage().equals("409 Conflict: \"Операция заблокирована блокировщиком\"")) {
                 customMetrics.incrementCacsBlocker(login, currency.name());
@@ -156,6 +159,7 @@ public class UserController {
 
         try {
             transferApiService.transfer(transferDto);
+            log.info("Операция перевода  от {}: {} {} к {}: {}", login, value, fromCurrency.name(), toLogin, toCurrency.name());
         } catch (RestClientResponseException restClientResponseException) {
             if (login.equals(toLogin)) {
                 if(restClientResponseException.getMessage().equals("409 Conflict: \"Операция заблокирована блокировщиком\"")){
