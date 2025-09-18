@@ -6,7 +6,10 @@
         </Console>
         <Kafka name="Kafka" topic="logstash" syncSend="false">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %level %logger{36} - %msg%n"/>
+<!--
             <Property name="bootstrap.servers">localhost:9092</Property>
+-->
+            <Property name="bootstrap.servers">${env:SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS:-localhost:9092}</Property>
         </Kafka>
     </Appenders>
     <Loggers>

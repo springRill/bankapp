@@ -5,6 +5,9 @@
 1. zipkin
 2. prometheus с алертами
 3. grafana с дашбордами
+4. elasticsearch
+5. logstash
+6. kibana
 4. postgresql
 5. kafka
 6. nginx
@@ -26,11 +29,12 @@
 
 #### запускаем minikube и установливаем окружение
 
-- `minikube start --driver=docker`  minikube start --driver=docker --memory=8192
+- `minikube start --driver=docker` minikube start --driver=docker --memory=15000 --cpus=4
 - `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
 - `helm repo add zipkin https://zipkin.io/zipkin-helm`
 - `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
 - `helm repo add grafana https://grafana.github.io/helm-charts`
+- `helm repo add elastic https://helm.elastic.co`
 - `helm repo update`
 - `helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx   --namespace ingress-nginx --create-namespace`
 - `minikube docker-env | Invoke-Expression`
@@ -65,12 +69,14 @@
 - `127.0.0.1 bankapp`
 - `127.0.0.1 zipkin`
 - `127.0.0.1 prometheus`
-- `127.0.0.1 grafana` \
+- `127.0.0.1 grafana`
+- `127.0.0.1 kibana` \
 запустить в консоли `minikube tunnel` \
 приложение http://bankapp/ \
 зипкин http://zipkin/ \
 прометеус http://prometheus/ \
-графана http://grafana/ 
+графана http://grafana/ \
+кибана http://kibana/
 
 в приложении настроены кастомные метрики
 - user_login_success_total - количество успешных логинов пользователя
@@ -93,7 +99,7 @@
 - приписываем `GHCR_TOKEN` в `jenkins/.env`
 - приписываем `GITHUB_USERNAME` в `jenkins/.env`
 - приписываем `DOCKER_REGISTRY` в `jenkins/.env`
-- исполняем `jenkins/docker-compose.yml` jenkins будет доступен по адресу http://localhost:9090/
+- запускаем `jenkins/docker-compose.yml` jenkins будет доступен по адресу http://localhost:9090/
 - запускаем в консоли `docker network connect minikube jenkins`
 
 ### для запуска приложения отдельными чартами в default namespace запускаем последовательно сборки в jenkins
