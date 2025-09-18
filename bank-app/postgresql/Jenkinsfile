@@ -16,7 +16,8 @@ pipeline {
                           --set auth.username=postgres \
                           --set auth.password=admin \
                           --set auth.database=bank \
-                          --version 14.2.3
+                          --set image.repository=bitnami/postgresql \
+                          --set image.tag=16.7.27-debian-12-r5
                     '''
                 }
             }
