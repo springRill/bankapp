@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SHARED_REPO = '../shared/bankapp' // рабочая папка на jenkins
-        IMAGE_NAME = "kafka" // название образа
+        IMAGE_NAME = "kibana" // название образа
     }
 
     stages {
@@ -16,11 +16,11 @@ pipeline {
             }
         }
 
-        stage('Deploy Kafka') {
+        stage('Deploy Kibana') {
             steps {
                 dir("${SHARED_REPO}/bank-app/charts/${IMAGE_NAME}") {
                     sh """
-                    helm upgrade --install bank-app-kafka . \
+                    helm upgrade --install bank-app-kibana . \
                       --namespace default \
                       --create-namespace
                     """
