@@ -48,7 +48,7 @@ prometheus:
     enabled: true
     className: "nginx"
     hosts:
-      - host: prometheus
+      - host: prometheus1
         paths:
           - path: /
             pathType: Prefix

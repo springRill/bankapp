@@ -22,11 +22,11 @@ serviceAccount:
 ingress:
   enabled: true
   className: "nginx"
-  hosts:
-    - host: prometheus
-      paths:
-        - path: /
-          pathType: Prefix
+#  hosts:
+#    - host: prometheus
+#      paths:
+#        - path: /
+#          pathType: Prefix
 
 volumes:
   - name: prometheus-config
