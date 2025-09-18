@@ -33,7 +33,7 @@ zipkin:
 #    path: /
 #    pathType: Prefix
     hosts:
-      - host: zipkin-test
+      - host: zipkin
         paths:
           - path: /
             pathType: Prefix

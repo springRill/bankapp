@@ -120,9 +120,9 @@ pipeline {
                       --set front-ui.ingress.hosts[0].host=bankapp-test \
                       --set front-ui.ingress.hosts[0].paths[0].path=/ \
                       --set front-ui.ingress.hosts[0].paths[0].pathType=Prefix \
-                      --set zipkin.ingress.hosts[0].host=zipkin-test \
-                      --set zipkin.ingress.hosts[0].paths[0].path=/ \
-                      --set zipkin.ingress.hosts[0].paths[0].pathType=Prefix \
+                      --set zipkin.ingress.hosts[0].name=zipkin-test \
+                      --set zipkin.ingress.hosts[0].path=/ \
+                      --set zipkin.ingress.hosts[0].pathType=Prefix \
                       --set prometheus.ingress.hosts[0].host=prometheus-test \
                       --set prometheus.ingress.hosts[0].paths[0].path=/ \
                       --set prometheus.ingress.hosts[0].paths[0].pathType=Prefix \
