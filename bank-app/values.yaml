@@ -44,7 +44,14 @@ prometheus:
   service:
     type: ClusterIP
     port: 9090
-
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: prometheus
+        paths:
+          - path: /
+            pathType: Prefix
 grafana:
   service:
     type: ClusterIP
