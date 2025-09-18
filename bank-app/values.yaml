@@ -63,7 +63,7 @@ kibana:
 postgresql:
   image:
     registry: docker.io
-    repository: bitnamilegacy/postgresql
+    repository: bitnami/postgresql
     tag: 17.6.0
   auth:
     username: postgres
