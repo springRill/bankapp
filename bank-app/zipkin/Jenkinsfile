@@ -22,5 +22,37 @@ pipeline {
                 }
             }
         }
+
+        stage('Expose Zipkin via Ingress') {
+            steps {
+                script {
+                    // Создаем ingress манифест на лету
+                    writeFile file: 'zipkin-ingress.yaml', text: '''
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zipkin-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: zipkin.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bank-app-zipkin
+            port:
+              number: 9411
+'''
+                    sh 'kubectl apply -f zipkin-ingress.yaml'
+                }
+            }
+        }
+
     }
 }
