@@ -28,10 +28,14 @@ zipkin:
     enabled: false
   ingress:
     enabled: true
-    hosts:
-      - name: zipkin-test
-        path: /
-        pathType: Prefix
+    host: zipkin
+    path: /
+#  ingress:
+#    enabled: true
+#    hosts:
+#      - name: zipkin-test
+#        path: /
+#        pathType: Prefix
 #  ingress:
 #    enabled: true
 #    host: zipkin
