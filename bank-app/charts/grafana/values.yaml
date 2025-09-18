@@ -23,11 +23,11 @@ serviceAccount:
 ingress:
   enabled: true
   className: "nginx"
-  hosts:
-    - host: grafana
-      paths:
-        - path: /
-          pathType: Prefix
+#  hosts:
+#    - host: grafana
+#      paths:
+#        - path: /
+#          pathType: Prefix
 
 persistence:
   enabled: true

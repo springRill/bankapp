@@ -33,12 +33,12 @@ zipkin:
 #    path: /
 #    pathType: Prefix
     hosts:
-      - host: zipkin
+      - host: zipkin-test
         paths:
           - path: /
             pathType: Prefix
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
+#    annotations:
+#      kubernetes.io/ingress.class: "nginx"
 
 prometheus:
   service:
@@ -48,14 +48,24 @@ prometheus:
     enabled: true
     className: "nginx"
     hosts:
-      - host: prometheus1
+      - host: prometheus-test
         paths:
           - path: /
             pathType: Prefix
+
 grafana:
   service:
     type: ClusterIP
     port: 3000
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: grafana-test
+        paths:
+          - path: /
+            pathType: Prefix
+
 
 elasticsearch:
   service:
@@ -71,6 +81,15 @@ kibana:
   service:
     type: ClusterIP
     port: 5601
+  ingress:
+    enabled: true
+    className: "nginx"
+    hosts:
+      - host: kibana-test
+        paths:
+          - path: /
+            pathType: Prefix
+
 
 postgresql:
   image:

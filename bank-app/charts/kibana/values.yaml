@@ -24,8 +24,8 @@ serviceAccount:
 ingress:
   enabled: true
   className: "nginx"
-  hosts:
-    - host: kibana
-      paths:
-        - path: /
-          pathType: Prefix
+#  hosts:
+#    - host: kibana
+#      paths:
+#        - path: /
+#          pathType: Prefix
