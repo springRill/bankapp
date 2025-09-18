@@ -11,7 +11,7 @@ pipeline {
 
                     // Деплоим только postgresql
                     sh '''
-                        helm upgrade --install bank-app-postgresql bitnamilegacy/postgresql \
+                        helm upgrade --install bank-app-postgresql bitnami/postgresql \
                           --namespace default \
                           --set auth.username=postgres \
                           --set auth.password=admin \
