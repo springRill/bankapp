@@ -16,7 +16,6 @@ pipeline {
             }
         }
 
-/*
         stage('Clean and build') {
             steps {
                 dir("${SHARED_REPO}") {
@@ -39,9 +38,7 @@ pipeline {
                 }
             }
         }
- */
 
-/*
         stage('Push Image to Registry') {
             steps {
                 withCredentials([string(credentialsId: 'GHCR_TOKEN', variable: 'GHCR_TOKEN')]) {
@@ -59,7 +56,6 @@ pipeline {
                 }
             }
         }
- */
 
         stage('Helm dependency update') {
             steps {
@@ -191,7 +187,20 @@ pipeline {
                       --set front-ui.image.repository=${DOCKER_REGISTRY}/front-ui \
                       --set front-ui.ingress.hosts[0].host=bankapp-prod \
                       --set front-ui.ingress.hosts[0].paths[0].path=/ \
-                      --set front-ui.ingress.hosts[0].paths[0].pathType=Prefix
+                      --set front-ui.ingress.hosts[0].paths[0].pathType=Prefix \
+                      --set zipkin.ingress.enabled=true \
+                      --set zipkin.ingress.host=zipkin-prod \
+                      --set zipkin.ingress.path=/ \
+                      --set zipkin.ingress.pathType=Prefix \
+                      --set prometheus.ingress.hosts[0].host=prometheus-prod \
+                      --set prometheus.ingress.hosts[0].paths[0].path=/ \
+                      --set prometheus.ingress.hosts[0].paths[0].pathType=Prefix \
+                      --set grafana.ingress.hosts[0].host=grafana-prod \
+                      --set grafana.ingress.hosts[0].paths[0].path=/ \
+                      --set grafana.ingress.hosts[0].paths[0].pathType=Prefix \
+                      --set kibana.ingress.hosts[0].host=kibana-prod \
+                      --set kibana.ingress.hosts[0].paths[0].path=/ \
+                      --set kibana.ingress.hosts[0].paths[0].pathType=Prefix
                     """
                 }
             }
