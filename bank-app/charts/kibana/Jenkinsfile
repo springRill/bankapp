@@ -22,7 +22,12 @@ pipeline {
                     sh """
                     helm upgrade --install bank-app-kibana . \
                       --namespace default \
-                      --create-namespace
+                      --create-namespace \
+                      --set ingress.enabled=true \
+                      --set ingress.className=nginx \
+                      --set ingress.hosts[0].host=kibana-test \
+                      --set ingress.hosts[0].paths[0].path=/ \
+                      --set ingress.hosts[0].paths[0].pathType=Prefix
                     """
                 }
             }
