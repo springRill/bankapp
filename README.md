@@ -103,29 +103,57 @@
 - запускаем в консоли `docker network connect minikube jenkins`
 
 ### для запуска приложения отдельными чартами в default namespace запускаем последовательно сборки в jenkins
-- 01_kafka
-- 02_keycloak
-- 03_postgresql
-- 04_exchange-api
-- 05_exchange-generator
-- 06_blocker-api
-- 07_notifications-api
-- 08_accounts-api
-- 09_transfer-api
-- 10_cash-api
-- 11_front-ui
+- 01_zipkin
+- 02_prometheus
+- 03_grafana
+- 04_elasticsearch
+- 05_logstash
+- 06_kibana
+- 07_kafka
+- 08_keycloak
+- 09_postgresql
+- 10_exchange-api
+- 11_exchange-generator
+- 12_blocker-api
+- 13_notifications-api
+- 14_accounts-api
+- 15_transfer-api
+- 16_cash-api
+- 17_front-ui
 
 ### запускаем в консоли
 - `minikube tunnel`
 - приложение будет доступно в браузере http://bankapp/
+- зипкин http://zipkin/
+- прометеус http://prometheus/
+- графана http://grafana/
+- кибана http://kibana/
 
 ### для запуска приложения полностью в test и, опционально drod namespace запускаем в jenkins
 - 00_bank-app
 
 ### прописываем в `etc/hosts`
 - `127.0.0.1 bankapp-test`
+- `127.0.0.1 zipkin-test`
+- `127.0.0.1 prometheus-test`
+- `127.0.0.1 grafana-test`
+- `127.0.0.1 kibana-test`
+
 - `127.0.0.1 bankapp-prod`
+- `127.0.0.1 zipkin-prod`
+- `127.0.0.1 prometheus-prod`
+- `127.0.0.1 grafana-prod`
+- `127.0.0.1 kibana-prod`
 
 ### приложение будет доступно в браузере
-- тестовое  http://bankapp-test/
-- продуктовое  http://bankapp-prod/
+- тестовое приложение http://bankapp-test/
+- тестовый зипкин http://zipkin-test/
+- тестовый прометеус http://prometheus-test/
+- тестовая графана http://grafana-test/
+- тестовая кибана http://kibana-test/
+
+- продуктовое приложение  http://bankapp-prod/
+- продуктовый зипкин http://zipkin-prod/
+- продуктовый прометеус http://prometheus-prod/
+- продуктовая графана http://grafana-prod/
+- продуктовая кибана http://kibana-prod/
