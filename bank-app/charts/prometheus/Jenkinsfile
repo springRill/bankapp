@@ -25,7 +25,7 @@ pipeline {
                       --create-namespace \
                       --set ingress.enabled=true \
                       --set ingress.className=nginx \
-                      --set ingress.hosts[0].host=prometheus-test \
+                      --set ingress.hosts[0].host=prometheus \
                       --set ingress.hosts[0].paths[0].path=/ \
                       --set ingress.hosts[0].paths[0].pathType=Prefix
                     """
