@@ -31,7 +31,7 @@ env:
     value: single-node
   - name: xpack.security.enabled
     value: "false"
-  - name: network.host
-    value: 0.0.0.0
+  - name: ES_SETTING_NETWORK_HOST
+    value: "0.0.0.0"
   - name: ES_JAVA_OPTS
     value: "-Xms512m -Xmx512m"
