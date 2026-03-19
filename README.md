@@ -8,7 +8,7 @@
 4. keycloak с конфигурацией
 5. notifications - сервис уведомлений
 6. blocker - сервис блокировки операций
-7. exchenge-generator - приложение для генерации курсов валют
+7. exchange-generator - приложение для генерации курсов валют
 8. exchange - сервис хранения курсов валют
 9. cash - сервис ввода и вывода наличных
 10. transfer - сервис перевода денег между счетами
@@ -21,7 +21,7 @@
 
 ### выполнить из корня проекта
 
-#### запускаем minikube и установливаем окружение
+#### запускаем minikube и устанaвливаем окружение
 
 - `minikube start --driver=docker`
 - `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
@@ -90,7 +90,7 @@
 - `minikube tunnel`
 - приложение будет доступно в браузере http://bankapp/
 
-### для запуска приложения полностью в test и, опционально drod namespace запускаем в jenkins
+### для запуска приложения полностью в test и, опционально prod namespace запускаем в jenkins
 - 00_bank-app
 
 ### прописываем в `etc/hosts`
